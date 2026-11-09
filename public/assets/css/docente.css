@@ -1,0 +1,47 @@
+/* ============================================================
+   docente.css — Página principal del docente (estructura base)
+   ============================================================ */
+
+/* Encabezado navy fijo con regla oro */
+.site-header {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--navy);
+  border-bottom: 4px solid var(--gold);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06), 0 6px 16px -10px rgba(0, 0, 0, 0.6);
+}
+.site-header__inner {
+  min-height: 76px;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s-4);
+}
+.brand { font-family: var(--font-serif); font-weight: 700; color: #fff; text-decoration: none; }
+.user-chip { display: flex; align-items: center; gap: var(--s-3); color: var(--ink-on-navy); }
+.user-chip form { margin: 0; }
+@media (max-width: 900px) { .site-header__inner { min-height: 68px; } }
+
+/* Banda de saludo */
+.welcome {
+  background: var(--navy);
+  border-bottom: 4px solid var(--gold);
+  padding-block: var(--s-7);
+}
+.welcome h1 {
+  color: #fff;
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+  letter-spacing: -0.015em;
+}
+
+/* Secciones */
+.section { padding-block: var(--s-7); }
+.section .section-title { margin-bottom: var(--s-5); }
+
+/* Pie */
+.site-footer {
+  background: var(--navy-900);
+  border-top: 4px solid var(--gold);
+  color: var(--ink-on-navy);
+  padding-block: var(--s-6);
+}
+
+@media print {
+  .site-header, .welcome, .site-footer { display: none; }
+}

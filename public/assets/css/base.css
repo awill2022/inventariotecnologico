@@ -1,0 +1,115 @@
+/* ============================================================
+   base.css — Tokens de DESIGN.md, reset y componentes compartidos
+   ============================================================ */
+
+:root {
+  /* Marca */
+  --navy: #1e3453;
+  --navy-900: #121e30;
+  --navy-700: #2b4a72;
+  --gold: #d2a648;
+  --gold-700: #9c7424;
+  --gold-50: #fbf6ea;
+  --blue: #004c82;
+  --blue-700: #003a63;
+
+  /* Neutros */
+  --ground: #ebedef;
+  --panel: #ffffff;
+  --ink: #1d3744;
+  --ink-2: #4b5d69;
+  --ink-on-navy: #d9e1ec;
+  --line: #d6dbe0;
+  --line-2: #e6e9ec;
+
+  /* Estados (uno por estado, sin uso decorativo) */
+  --ok: #1d6b42;      --ok-50: #e6f2eb;
+  --warn: #8a4f00;    --warn-50: #fbf0dc;
+  --maint: #004c82;   --maint-50: #e3eef7;
+  --bad: #b3261e;
+  --loan: #5a3d8a;    --loan-50: #efeaf6;
+
+  /* Tipografía */
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-sans: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  /* Espaciado */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px;
+
+  /* Formas y profundidad */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --pill: 999px;
+  --shadow: 0 1px 2px rgba(18, 30, 48, 0.06), 0 6px 18px -8px rgba(18, 30, 48, 0.18);
+  --shadow-lift: 0 2px 4px rgba(18, 30, 48, 0.08), 0 16px 32px -12px rgba(18, 30, 48, 0.32);
+
+  --wrap: 1200px;
+}
+
+/* Reset mínimo */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 96px; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font: 400 1rem/1.55 var(--font-sans);
+}
+h1, h2, h3 { font-family: var(--font-serif); font-weight: 700; line-height: 1.2; margin: 0; color: var(--navy); }
+p { margin: 0; }
+a { color: var(--blue); }
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* Foco: anillo oro 3px con 2px de separación */
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--s-5); }
+@media (max-width: 560px) { .wrap { padding-inline: var(--s-4); } }
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Panel */
+.panel {
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--s-6);
+}
+@media (max-width: 560px) { .panel { padding: var(--s-5) var(--s-4); } }
+
+/* Botones */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+  min-height: 44px; padding: 0 var(--s-5);
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  font-weight: 600; text-decoration: none; cursor: pointer;
+  transition: background-color 160ms, border-color 160ms, transform 160ms;
+}
+.btn:active { transform: translateY(1px); }
+.btn--primary { background: var(--blue); color: #fff; }
+.btn--primary:hover { background: var(--blue-700); }
+.btn--outline { background: var(--panel); color: var(--blue); border-color: var(--blue); }
+.btn--outline:hover { background: var(--maint-50); }
+.btn--gold { background: var(--gold); color: var(--navy-900); }
+.btn--ghost { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.45); }
+.btn--ghost:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* Avisos */
+.alert { padding: var(--s-3) var(--s-4); border-radius: var(--radius-sm); font-weight: 600; }
+.alert--error { background: #fbe9e7; color: var(--bad); }
+
+/* Título de sección con barra oro 56 × 3px */
+.section-title {
+  font-size: clamp(1.5rem, 1.25rem + 0.8vw, 1.875rem);
+  letter-spacing: -0.01em;
+}
+.section-title::after {
+  content: ""; display: block; width: 56px; height: 3px;
+  margin-top: var(--s-3); background: var(--gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
