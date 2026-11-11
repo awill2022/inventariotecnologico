@@ -31,4 +31,18 @@ abstract class Model
         $stmt->execute($params);
         return $stmt->rowCount();
     }
+
+    /** Ejecuta varias escrituras como una sola transacción y devuelve lo que retorne $fn. */
+    public function transaccion(callable $fn): mixed
+    {
+        $this->db->beginTransaction();
+        try {
+            $resultado = $fn();
+            $this->db->commit();
+            return $resultado;
+        } catch (Throwable $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+    }
 }

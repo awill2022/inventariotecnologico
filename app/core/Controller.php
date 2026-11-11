@@ -23,11 +23,19 @@ abstract class Controller
         exit;
     }
 
+    /** Responde 404 cuando el registro pedido no existe. */
+    protected function notFound(): never
+    {
+        http_response_code(404);
+        View::render('errors/404', ['titulo' => 'Página no encontrada'], 'auth');
+        exit;
+    }
+
     /** Corta la petición si el token CSRF del formulario no es válido. */
     protected function requireCsrf(): void
     {
         if (!Session::validCsrf($_POST['_csrf'] ?? null)) {
-            http_response_code(419);
+            http_response_code(403); // Apache convierte el 419 (no estándar) en 500
             View::render('errors/403', [
                 'titulo'  => 'Sesión expirada',
                 'mensaje' => 'El formulario expiró. Vuelve a intentarlo.',

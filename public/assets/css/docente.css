@@ -1,47 +1,400 @@
-/* ============================================================
-   docente.css — Página principal del docente (estructura base)
-   ============================================================ */
+/* =========================================================
+   docente.css — Página de inicio del rol consulta:
+   buscador, etiquetas patrimoniales, reporte de falla e historial
+   ========================================================= */
 
-/* Encabezado navy fijo con regla oro */
-.site-header {
-  position: sticky; top: 0; z-index: 20;
-  background: var(--navy);
-  border-bottom: 4px solid var(--gold);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06), 0 6px 16px -10px rgba(0, 0, 0, 0.6);
-}
-.site-header__inner {
-  min-height: 76px;
-  display: flex; align-items: center; justify-content: space-between; gap: var(--s-4);
-}
-.brand { font-family: var(--font-serif); font-weight: 700; color: #fff; text-decoration: none; }
-.user-chip { display: flex; align-items: center; gap: var(--s-3); color: var(--ink-on-navy); }
-.user-chip form { margin: 0; }
-@media (max-width: 900px) { .site-header__inner { min-height: 68px; } }
-
-/* Banda de saludo */
-.welcome {
-  background: var(--navy);
-  border-bottom: 4px solid var(--gold);
-  padding-block: var(--s-7);
-}
-.welcome h1 {
-  color: #fff;
-  font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem);
-  letter-spacing: -0.015em;
-}
-
-/* Secciones */
-.section { padding-block: var(--s-7); }
-.section .section-title { margin-bottom: var(--s-5); }
-
-/* Pie */
-.site-footer {
-  background: var(--navy-900);
-  border-top: 4px solid var(--gold);
-  color: var(--ink-on-navy);
+/* ---------- Banda de saludo + búsqueda ---------- */
+.welcome-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: var(--s-7);
+  align-items: end;
   padding-block: var(--s-6);
 }
 
-@media print {
-  .site-header, .welcome, .site-footer { display: none; }
+.lookup {
+  background: var(--navy-700);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  padding: var(--s-5);
 }
+.lookup-label { display: block; font: 600 1.25rem/1.2 var(--serif); margin-bottom: var(--s-3); }
+.lookup-row { display: flex; gap: var(--s-2); }
+.lookup-field { position: relative; flex: 1; min-width: 0; }
+.lookup-field .icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6a7a88;
+  pointer-events: none;
+}
+.lookup-field input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--s-4) 0 44px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--ink);
+  font: 400 1rem/1 var(--sans);
+  caret-color: var(--blue);
+}
+.lookup-field input::placeholder { color: #66737f; }
+.lookup-field input:focus { outline: none; border-color: var(--gold); }
+.lookup .btn { min-height: 48px; }
+.lookup-help { margin-top: var(--s-3); font-size: 0.875rem; color: var(--ink-on-navy); }
+.lookup-status {
+  margin-top: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  background: rgba(210, 166, 72, 0.16);
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-size: 0.9375rem;
+}
+
+/* ---------- Filtros ---------- */
+.filters { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+.chip {
+  min-height: 40px;
+  padding: 0 var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--ink);
+  font: 600 0.9375rem/1 var(--sans);
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.chip:hover { border-color: var(--navy); }
+.chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+/* ---------- Mis equipos: etiquetas patrimoniales ---------- */
+.tags {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--s-5);
+  align-items: start;
+}
+
+/* La placa impresa que lleva cada bien del instituto */
+.tag {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #f6f7f8;
+  border: 1px solid #c3cbd2;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform 320ms var(--ease-out), box-shadow 320ms var(--ease-out), outline-color 320ms ease;
+  outline: 3px solid transparent;
+  outline-offset: 2px;
+}
+
+.tag-band {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px var(--s-4);
+  background: var(--navy);
+  color: var(--gold);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.tag-band span:last-child { color: var(--ink-on-navy); letter-spacing: 0.08em; }
+
+.tag-main {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-4) var(--s-4) 0;
+}
+.tag-code {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.tag-patr { margin-top: var(--s-1); font-size: 0.8125rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+.tag-qr {
+  flex: none;
+  width: 76px;
+  height: 76px;
+  padding: 3px;
+  background: #fff;
+  border: 1px solid #c8cfd5;
+  border-radius: 2px;
+}
+.tag-qr svg { display: block; width: 100%; height: 100%; }
+
+/* En celulares el QR miniatura no se puede escanear: su lugar lo ocupa este botón */
+.tag-qr-btn { display: none; }
+
+/* ---------- Ventana del QR ampliado ---------- */
+.qr-dialog {
+  width: min(360px, calc(100% - 2 * var(--s-4)));
+  max-height: calc(100% - 2 * var(--s-4));
+  padding: 0;
+  border: 1px solid #c3cbd2;
+  border-radius: var(--radius);
+  background: #f6f7f8;
+  color: var(--ink);
+  box-shadow: var(--shadow-lift);
+  overflow: auto;
+}
+.qr-dialog[open] { animation: qr-entra 240ms var(--ease-out); }
+.qr-dialog::backdrop { background: rgba(18, 30, 48, 0.6); }
+@keyframes qr-entra {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+html:has(.qr-dialog[open]) { overflow: hidden; }
+
+.qr-dialog-body { display: grid; justify-items: center; padding: var(--s-5) var(--s-5) var(--s-5); text-align: center; }
+.qr-dialog-code {
+  font: 700 1.75rem/1.1 var(--sans);
+  color: var(--navy-900);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.qr-dialog-qr {
+  width: min(240px, 100%);
+  aspect-ratio: 1;
+  margin-top: var(--s-4);
+  padding: var(--s-2);
+  background: #fff;
+  border: 1px solid #c8cfd5;
+  border-radius: 2px;
+}
+.qr-dialog-qr svg { display: block; width: 100%; height: 100%; }
+.qr-dialog-qr:empty::before {
+  content: "No se pudo generar el código QR.";
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+.qr-dialog-name { margin-top: var(--s-4); font: 700 1.1875rem/1.25 var(--serif); color: var(--navy); }
+.qr-dialog-help { margin-top: var(--s-1); font-size: 0.9375rem; color: var(--ink-2); }
+.qr-dialog .btn { margin-top: var(--s-5); }
+
+/* Pantallas bajas: la ventana entra completa sin desplazarse */
+@media (max-height: 640px) {
+  .qr-dialog-body { padding: var(--s-4); }
+  .qr-dialog-qr { width: min(240px, 100%, 34vh); margin-top: var(--s-3); }
+  .qr-dialog-name { margin-top: var(--s-3); }
+  .qr-dialog .btn { margin-top: var(--s-4); }
+}
+
+.tag-name { margin-top: var(--s-3); padding-inline: var(--s-4); font-size: 1.1875rem; }
+.tag-model { padding-inline: var(--s-4); font-size: 0.9375rem; color: var(--ink-2); }
+
+.tag-meta { display: grid; gap: 6px; margin-top: var(--s-3); padding-inline: var(--s-4); font-size: 0.9375rem; }
+.tag-meta li { display: flex; gap: var(--s-2); align-items: flex-start; }
+.tag-meta .icon { width: 18px; height: 18px; margin-top: 2px; color: var(--navy-700); }
+.tag-meta--alert { color: var(--warn); font-weight: 600; }
+.tag-meta--alert .icon { color: var(--warn); }
+
+/* Sello de estado: impreso sobre la etiqueta, nunca se oculta */
+.stamps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+  padding-inline: var(--s-4);
+}
+.stamp {
+  display: inline-flex;
+  padding: 3px 10px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--panel);
+}
+.stamp--ok { color: var(--ok); }
+.stamp--warn { color: var(--warn); }
+.stamp--maint { color: var(--maint); }
+.stamp--bad { color: var(--bad); }
+.stamp--muted { color: var(--ink-2); }
+
+.tag-actions {
+  display: flex;
+  gap: var(--s-2);
+  margin-top: var(--s-4);
+  padding: var(--s-2);
+  border-top: 1px dashed #b9c1c8;
+}
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 var(--s-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--blue);
+  font: 600 0.9375rem/1 var(--sans);
+  text-decoration: none;
+  cursor: pointer;
+}
+.link-btn:hover { background: rgba(0, 76, 130, 0.08); color: var(--blue-700); }
+.link-btn .icon { width: 18px; height: 18px; transition: transform 200ms ease; }
+.link-btn[aria-expanded="true"] .icon { transform: rotate(180deg); }
+.link-btn--muted { color: var(--ink-2); margin-left: auto; }
+.link-btn--muted:hover { color: var(--warn); background: var(--warn-50); }
+
+.tag-sheet {
+  margin: 0;
+  padding: var(--s-3) var(--s-4) var(--s-4);
+  background: var(--panel);
+  border-top: 1px solid var(--line-2);
+  display: grid;
+  gap: var(--s-2);
+  font-size: 0.9375rem;
+}
+.tag-sheet > div { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: var(--s-3); }
+.tag-sheet dt { color: var(--ink-2); }
+.tag-sheet dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* Firma: un chip de código señala su etiqueta */
+.tag.is-linked {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+  outline-color: var(--gold);
+}
+.tag.is-flash { animation: tag-flash 1400ms var(--ease-out); }
+@keyframes tag-flash {
+  0%   { outline-color: var(--gold); box-shadow: 0 0 0 10px rgba(210, 166, 72, 0.35), var(--shadow-lift); }
+  100% { outline-color: transparent; box-shadow: 0 0 0 0 rgba(210, 166, 72, 0), var(--shadow); }
+}
+
+#sin-resultados { margin-top: var(--s-5); }
+
+/* ---------- Reportar + historial ---------- */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: var(--s-5);
+  padding-block: var(--s-7) var(--s-8);
+  align-items: start;
+}
+
+.split .notice { margin-top: var(--s-5); }
+.report { display: grid; gap: var(--s-5); margin-top: var(--s-5); }
+.report-empty { margin-top: var(--s-5); color: var(--ink-2); }
+
+.radios { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); }
+.radio { display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; cursor: pointer; }
+.radio input { width: 20px; height: 20px; accent-color: var(--blue); margin: 0; }
+
+.report-actions { display: flex; gap: var(--s-2); align-items: center; }
+
+.timeline { margin-top: var(--s-5); display: grid; }
+.timeline li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: var(--s-3);
+  padding-bottom: var(--s-5);
+}
+.timeline li:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 40px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--line-2);
+}
+.tl-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--ground);
+  color: var(--navy);
+}
+.tl-icon .icon { width: 18px; height: 18px; }
+.tl-icon--warn { background: var(--warn-50); color: var(--warn); }
+.tl-what { font-weight: 600; }
+.tl-detail { font-size: 0.9375rem; color: var(--ink-2); }
+.tl-when { display: block; margin-top: 2px; font-size: 0.8125rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1080px) {
+  .welcome-grid { grid-template-columns: 1fr; gap: var(--s-5); align-items: start; }
+}
+
+@media (max-width: 900px) {
+  .split { grid-template-columns: 1fr; }
+}
+
+/* Banda compacta en celular (vertical, o horizontal con poca altura):
+   el saludo y el buscador ceden espacio para que "Mis equipos" asome
+   en la primera pantalla. El buscador deja de ser una caja dentro de la banda. */
+@media (max-width: 560px), (max-height: 520px) and (orientation: landscape) and (max-width: 1080px) {
+  .welcome-grid { padding-block: var(--s-5); gap: var(--s-4); }
+  .welcome h1 { font-size: 1.75rem; }
+  .welcome-sub { margin-top: var(--s-2); font-size: 1rem; }
+  .lookup { padding: 0; background: none; border: 0; border-radius: 0; }
+  .lookup-label { font-size: 1.0625rem; margin-bottom: var(--s-2); }
+  /* El ejemplo de código queda para lectores de pantalla (aria-describedby) */
+  .lookup-help { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+
+@media (max-width: 560px) {
+  .lookup-row { flex-wrap: wrap; }
+  .lookup-field { flex-basis: 100%; }
+  .lookup .btn { flex: 1; }
+
+  .tags { grid-template-columns: 1fr; }
+
+  .tag-main { align-items: flex-start; }
+  .tag-qr { display: none; }
+  .tag-qr-btn {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-1);
+    width: 76px;
+    min-height: 56px;
+    padding: var(--s-2) var(--s-1);
+    border: 1px solid #c8cfd5;
+    border-radius: var(--radius-sm);
+    background: #fff;
+    color: var(--blue);
+    font: 600 0.8125rem/1.1 var(--sans);
+    cursor: pointer;
+    transition: background-color 160ms ease, border-color 160ms ease;
+  }
+  .tag-qr-btn .icon { width: 22px; height: 22px; }
+  .tag-qr-btn:hover,
+  .tag-qr-btn:active { background: var(--maint-50); border-color: var(--blue); }
+  .tag-sheet > div { grid-template-columns: 1fr; gap: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tag.is-linked { transform: none; }
+}
+
+@media print {
+  .filters, .tag-actions, #reportar, .tag-qr-btn, .qr-dialog { display: none; }
+  .tag-qr { display: block; }
+}
+
+/* Avisos generales bajo el saludo (p. ej. al volver de Mi perfil) */
+.avisos-pagina { display: grid; gap: var(--s-3); padding-top: var(--s-5); }

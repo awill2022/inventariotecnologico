@@ -44,7 +44,7 @@ final class App
     }
 
     /** Ruta solicitada relativa a la base: /login, /docente, ... */
-    private static function path(): string
+    public static function path(): string
     {
         $uri  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
         $base = self::basePath();
@@ -59,7 +59,7 @@ final class App
 
     private static function autoload(string $class): void
     {
-        foreach (['core', 'controllers', 'models'] as $dir) {
+        foreach (['core', 'controllers', 'models', 'helpers'] as $dir) {
             $file = APP_PATH . "/$dir/$class.php";
             if (is_file($file)) {
                 require $file;

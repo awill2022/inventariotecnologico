@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "public/assets/css/auth.css"
+        ],
+        "createdAt": "2026-11-09T03:33:04.556Z",
+        "reason": "DESIGN.md (project design system): 'cerrar cada banda navy con una regla oro de 4px'; login-brand is a full-height navy band, not a card"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "public/assets/css/panel.css"
+        ],
+        "createdAt": "2026-11-11T13:56:19.103Z",
+        "reason": "Claude: no es una tarjeta; es la regla oro de 4px que cierra la barra lateral navy, exigida por DESIGN.md (cada banda navy se cierra con regla oro de 4px)"
+      }
+    ]
+  }
+}

@@ -8,6 +8,7 @@ return [
         'name'     => 'Inventario Tecnológico · ISTSGA',
         'timezone' => 'America/Guayaquil',
         'debug'    => true, // false en producción: oculta detalles de errores
+        'escudo'   => 'https://academico.sangabrielriobamba.edu.ec/assets/brand/SGlogo.svg',
     ],
 
     'db' => [
@@ -26,9 +27,10 @@ return [
 
     // Página de inicio según el rol (enum usuarios.rol)
     'home_por_rol' => [
-        'consulta' => '/docente',
-        // 'administrador' => '/admin',       // otros sprints
-        // 'inventario'    => '/inventario',
-        // 'tecnico'       => '/tecnico',
+        'consulta'      => '/docente',
+        // Sus módulos llegan en otros sprints: por ahora ven una página "en construcción".
+        'administrador' => '/panel',
+        'inventario'    => '/panel',
+        'tecnico'       => '/panel',
     ],
 ];

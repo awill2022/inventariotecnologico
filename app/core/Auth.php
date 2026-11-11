@@ -8,13 +8,40 @@ final class Auth
     public static function login(array $usuario): void
     {
         Session::regenerate();
+        $nombres   = trim($usuario['nombres'] ?? '');
+        $apellidos = trim($usuario['apellidos'] ?? '');
+        $nombre    = trim("$nombres $apellidos") ?: $usuario['usuario'];
+        $primero   = strtok($nombres ?: $usuario['usuario'], ' ');
+        $iniciales = mb_strtoupper(
+            mb_substr($nombres ?: $usuario['usuario'], 0, 1) . mb_substr($apellidos, 0, 1)
+        );
+
         Session::set('auth', [
             'id'         => (int) $usuario['id'],
             'usuario'    => $usuario['usuario'],
             'rol'        => $usuario['rol'],
             'persona_id' => isset($usuario['persona_id']) ? (int) $usuario['persona_id'] : null,
-            'nombre'     => $usuario['nombre'] ?? $usuario['usuario'],
+            'nombre'     => $nombre,
+            'primer_nombre' => $primero,
+            'iniciales'  => $iniciales,
+            'cargo'      => $usuario['cargo'] ?? null,
+            // Clave temporal (cuenta nueva o restablecida): debe cambiarla antes de usar el sistema
+            'debe_cambiar_clave' => !empty($usuario['debe_cambiar_clave']),
         ]);
+    }
+
+    public static function debeCambiarClave(): bool
+    {
+        return !empty(self::user()['debe_cambiar_clave']);
+    }
+
+    /** Tras cambiar la clave: nueva sesión (otro id) y sin la marca de clave temporal. */
+    public static function claveCambiada(): void
+    {
+        Session::regenerate();
+        $auth = self::user();
+        $auth['debe_cambiar_clave'] = false;
+        Session::set('auth', $auth);
     }
 
     public static function logout(): void
@@ -43,15 +70,23 @@ final class Auth
         return App::config('home_por_rol', [])[self::rol()] ?? null;
     }
 
+    /** Rutas que se pueden usar mientras la clave sea temporal. */
+    private const RUTAS_CLAVE_TEMPORAL = ['/perfil', '/perfil/clave', '/logout'];
+
     /**
      * Exige sesión iniciada y, si se indican, uno de los roles permitidos.
      * ['*'] permite cualquier rol autenticado.
+     * Con clave temporal solo deja entrar a Mi perfil (para cambiarla) y a cerrar sesión.
      */
     public static function requireRole(array $roles): void
     {
         if (!self::check()) {
             Session::flash('error', 'Inicia sesión para continuar.');
             header('Location: ' . View::url('/login'));
+            exit;
+        }
+        if (self::debeCambiarClave() && !in_array(App::path(), self::RUTAS_CLAVE_TEMPORAL, true)) {
+            header('Location: ' . View::url('/perfil'));
             exit;
         }
         if ($roles !== ['*'] && !in_array(self::rol(), $roles, true)) {

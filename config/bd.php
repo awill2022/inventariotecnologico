@@ -8,14 +8,14 @@ const DB_HOST = 'localhost';
 const DB_NAME = 'inventario_tecnologico';
 const DB_USER = 'root';
 const DB_PASS = '';
-
+const DB_PORT = 3306;
 // ============ CONEXIÓN A BASE DE DATOS ============
 function db(): PDO {
     static $pdo = null;
 
     if ($pdo === null) {
         $pdo = new PDO(
-            "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+            "mysql:host=" . DB_HOST .";port=". DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4",
             DB_USER,
             DB_PASS,
             [

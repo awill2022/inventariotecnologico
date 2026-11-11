@@ -1,0 +1,57 @@
+/* =====================================================================
+   perfil.css — Mi perfil (todos los roles).
+   En el panel hereda .page-head, .volver y .sub-title de panel.css; en la
+   página del docente (layout main) los define aquí, bajo .perfil--suelto.
+   Mobile first: una columna; desde 880px, datos y clave lado a lado.
+   ===================================================================== */
+
+.perfil { display: grid; gap: var(--s-4); }
+
+/* ---------- Layout del docente: contenedor y piezas del panel ---------- */
+.perfil--suelto { padding-block: var(--s-5) var(--s-8); }
+.perfil--suelto .page-head { display: grid; gap: var(--s-4); }
+.perfil--suelto .sub-title { font-size: 1.375rem; }
+.perfil--suelto .sin-dato { color: var(--ink-2); }
+.perfil--suelto .volver {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 40px;
+  font-weight: 600;
+  text-decoration: none;
+  justify-self: start;
+}
+.perfil--suelto .volver:hover { text-decoration: underline; }
+
+/* ---------- Tarjetas ---------- */
+.perfil-grid { display: grid; gap: var(--s-4); align-items: start; }
+.perfil-grid .panel { padding: var(--s-5); }
+.perfil-grid--solo { max-width: 640px; }
+
+.perfil .sub-title { display: flex; align-items: center; gap: var(--s-2); }
+.perfil .sub-title .icon { color: var(--navy-700); }
+
+/* ---------- Mis datos ---------- */
+.perfil-quien { display: flex; align-items: center; gap: var(--s-4); }
+.perfil-quien > div { min-width: 0; }
+.perfil-quien .sub-title { overflow-wrap: anywhere; }
+.avatar--grande { width: 56px; height: 56px; font-size: 1.25rem; }
+.perfil-rol { color: var(--ink-2); font-size: 0.9375rem; }
+
+.datos {
+  display: grid;
+  gap: var(--s-3);
+  margin: var(--s-5) 0 var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-2);
+}
+.datos > div { display: grid; grid-template-columns: 7.5rem 1fr; gap: var(--s-3); align-items: baseline; }
+.datos dt { color: var(--ink-2); font-size: 0.875rem; }
+.datos dd { margin: 0; overflow-wrap: anywhere; }
+
+/* ---------- Cambiar clave ---------- */
+.perfil-form { margin-top: var(--s-5); max-width: none; }
+
+@media (min-width: 880px) {
+  .perfil-grid:not(.perfil-grid--solo) { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}

@@ -1,34 +1,132 @@
-/* ============================================================
-   auth.css — Login y páginas de error (estructura base)
-   ============================================================ */
+/* =========================================================
+   auth.css — Inicio de sesión (pantalla dividida) y páginas de estado
+   ========================================================= */
 
-.auth {
+/* ---------- Login ---------- */
+.login {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+}
+
+/* Banda institucional: navy cerrado por una regla oro de 4px */
+.login-brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--s-6);
+  padding: var(--s-8) var(--s-7) var(--s-6);
+  background: var(--navy);
+  border-right: 4px solid var(--gold);
+  color: #fff;
+}
+.login-brand-inner { max-width: 30rem; margin-block: auto; }
+.login-crest { width: 96px; height: 96px; }
+.login-kicker {
+  margin-top: var(--s-5);
+  color: var(--gold);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.login-system {
+  margin-top: var(--s-2);
+  font: 700 clamp(2rem, 1.4rem + 2.4vw, 3rem)/1.15 var(--serif);
+  letter-spacing: -0.015em;
+}
+.login-lead { margin-top: var(--s-4); max-width: 40ch; color: var(--ink-on-navy); font-size: 1.0625rem; }
+.login-place { color: var(--ink-on-navy); font-size: 0.875rem; }
+
+.login-main {
+  display: grid;
+  place-items: center;
+  padding: var(--s-7) var(--s-5);
+}
+.login-form {
+  width: 100%;
+  max-width: 420px;
+  display: grid;
+  gap: var(--s-5);
+  padding: var(--s-6);
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.login-help { margin-top: calc(var(--s-3) * -1); color: var(--ink-2); }
+.login-foot { font-size: 0.875rem; color: var(--ink-2); text-align: center; }
+
+/* Campo con icono a la izquierda (y botón opcional a la derecha) */
+.input-icon { position: relative; }
+.input-icon > .icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: #6a7a88;
+  pointer-events: none;
+}
+.input-icon input { padding-left: 42px; min-height: 48px; }
+.input-icon--action input { padding-right: 52px; }
+
+.toggle-pass {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.toggle-pass:hover:not(:disabled) { color: var(--blue); background: rgba(0, 76, 130, 0.08); }
+.toggle-pass:disabled { cursor: not-allowed; opacity: 0.5; }
+
+.login-form .btn-primary { min-height: 48px; }
+
+@media (max-width: 900px) {
+  .login { grid-template-columns: 1fr; }
+  .login-brand {
+    padding: var(--s-6) var(--s-5) var(--s-5);
+    border-right: 0;
+    border-bottom: 4px solid var(--gold);
+  }
+  .login-brand-inner { margin-block: 0; display: grid; grid-template-columns: auto 1fr; column-gap: var(--s-4); align-items: center; }
+  .login-crest { width: 64px; height: 64px; grid-row: span 2; }
+  .login-kicker { margin-top: 0; }
+  .login-system { margin-top: 0; font-size: 1.75rem; }
+  .login-lead { grid-column: 1 / -1; margin-top: var(--s-4); }
+  .login-place { display: none; }
+  .login-main { place-items: start center; padding-block: var(--s-6) var(--s-7); }
+}
+
+@media (max-width: 560px) {
+  .login-form { padding: var(--s-5) var(--s-4); }
+  .login-main { padding-inline: var(--s-4); }
+}
+
+/* ---------- Páginas de estado (404, 403) ---------- */
+.status-page {
   min-height: 100vh;
   display: grid;
   place-items: center;
   padding: var(--s-5) var(--s-4);
+  background: var(--navy);
+  border-top: 4px solid var(--gold);
 }
-
-.auth-card {
+.status-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
   display: grid;
-  gap: var(--s-3);
+  gap: var(--s-4);
+  justify-items: start;
 }
-
-.auth-card label { font-weight: 600; }
-
-.auth-card input[type="text"],
-.auth-card input[type="password"] {
-  min-height: 44px;
-  padding: 0 var(--s-4);
-  border: 1px solid #a9b4be;
-  border-radius: var(--radius-sm);
-  background: var(--panel);
-}
-
-.auth-card input:focus {
-  outline: none;
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(0, 76, 130, 0.2);
-}
+.status-card p { color: var(--ink-2); }

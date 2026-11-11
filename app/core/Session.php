@@ -46,11 +46,14 @@ final class Session
         session_destroy();
     }
 
-    /** Con mensaje: lo guarda para la siguiente petición. Sin mensaje: lo lee y lo borra. */
-    public static function flash(string $key, ?string $message = null): ?string
+    /**
+     * Con valor: lo guarda para la siguiente petición (texto o arreglo).
+     * Sin valor: lo lee y lo borra.
+     */
+    public static function flash(string $key, mixed $value = null): mixed
     {
-        if ($message !== null) {
-            $_SESSION['_flash'][$key] = $message;
+        if ($value !== null) {
+            $_SESSION['_flash'][$key] = $value;
             return null;
         }
         $value = $_SESSION['_flash'][$key] ?? null;

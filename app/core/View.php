@@ -31,9 +31,23 @@ final class View
         return App::basePath() . '/' . ltrim($path, '/');
     }
 
-    /** URL de un recurso estático en public/assets. */
+    /** URL absoluta (con esquema y host), p. ej. para codificarla en un QR. */
+    public static function absoluteUrl(string $path = '/'): string
+    {
+        $scheme = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+        $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        return $scheme . '://' . $host . self::url($path);
+    }
+
+    /**
+     * URL de un recurso estático en public/assets. Lleva la fecha de modificación
+     * del archivo (?v=) para que el navegador descargue la versión nueva tras un cambio.
+     */
     public static function asset(string $path): string
     {
-        return App::basePath() . '/assets/' . ltrim($path, '/');
+        $path    = ltrim($path, '/');
+        $archivo = dirname(APP_PATH) . '/public/assets/' . $path;
+        $version = is_file($archivo) ? '?v=' . filemtime($archivo) : '';
+        return App::basePath() . '/assets/' . $path . $version;
     }
 }

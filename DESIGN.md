@@ -223,7 +223,7 @@ Paleta institucional de navy y oro sobre gris frío, con un azul académico para
 
 Contenedor centrado de `--wrap` (1200px) con relleno lateral de 24px (16px en móvil). Escala de espaciado de 4px a 64px (`s-1`…`s-8`), ritmo principal en 12/16/24px. La página se apila en bandas de ancho completo: encabezado navy fijo (76px, 68px en móvil), banda de saludo con rejilla 1fr / 1.2fr (texto a la izquierda, buscador a la derecha, alineados abajo), agenda en tres columnas temporales dentro de un panel, rejilla de etiquetas `auto-fill` con mínimo 300px y separación 24px, bloque dividido 1.15fr / 1fr para reporte e historial, y pie de tres columnas.
 
-Puntos de quiebre: 1080px (la banda de saludo pasa a una columna; se oculta el nombre del usuario), 900px (navegación en menú desplegable con indicador oro vertical; agenda y bloque dividido a una columna; pie a dos columnas), 560px (etiquetas a una columna, fichas sin columna de rótulos, pie a una columna). Objetivos táctiles de 44px mínimo (40px en chips y botones-enlace). `scroll-padding-top: 96px` compensa el encabezado fijo.
+Puntos de quiebre: 1080px (la banda de saludo pasa a una columna; se oculta el nombre del usuario), 900px (navegación en menú desplegable con indicador oro vertical; agenda y bloque dividido a una columna; pie a dos columnas), 560px (etiquetas a una columna, fichas sin columna de rótulos, pie a una columna; banda de saludo compacta: saludo a 1.75rem, buscador sin caja y sin texto de ejemplo visible, para que "Mis equipos" asome en la primera pantalla; la misma banda compacta aplica en celular horizontal de hasta 520px de alto). Objetivos táctiles de 44px mínimo (40px en chips y botones-enlace). `scroll-padding-top: 96px` compensa el encabezado fijo.
 
 ## Elevation & Depth
 
@@ -267,14 +267,24 @@ Sobrios y firmes: altura mínima 44px (48px en el buscador), sans 600 a 1rem, es
 - **Radios:** nativos con `accent-color` azul, filas de 44px.
 
 ### Navigation
-Enlaces sans 600 en `ink-on-navy` sobre navy; hover blanco con fondo blanco al 8%; página actual en blanco con barra oro de 3px abajo (vertical a la izquierda en el menú móvil). Chip de usuario con avatar oro y separador blanco al 18%. Bajo 900px, botón "Menú" con borde y panel desplegable navy.
+Enlaces sans 600 en `ink-on-navy` sobre navy; hover blanco con fondo blanco al 8%; página actual en blanco con barra oro de 3px abajo (vertical a la izquierda en el menú móvil). Chip de usuario con avatar oro y separador blanco al 18%. Bajo 900px, botón "Menú" con borde y panel desplegable navy; abierto, el icono pasa a cerrar (×) y un velo navy al 50% cubre la página: tocarlo o pulsar Escape cierra el menú (Escape devuelve el foco al botón). Bajo 560px el botón queda solo con icono, pero conserva el nombre "Menú" para lectores de pantalla.
 
 ### Etiqueta patrimonial (componente firma)
-La placa impresa de cada bien. Superficie `#f6f7f8` con borde `#c3cbd2` y radio de 8px, `--shadow`. Arriba la banda navy con "ISTSGA" en oro y "Propiedad del instituto" en `ink-on-navy`, mayúsculas espaciadas. Debajo, código grande tabular (`code`) y "Patrimonial …" en `ink-2`, con el QR (generado desde `qr_token`) de 68px en marco blanco de 2px a la derecha. Luego nombre en serif, modelo y serie, metadatos con iconos de trazo (ubicación, próximo mantenimiento; alerta en `warn` 600), sellos de estado, línea de corte punteada con "Ver ficha" (despliega una lista de definición con cifras tabulares) y "Reportar falla".
+La placa impresa de cada bien. Superficie `#f6f7f8` con borde `#c3cbd2` y radio de 8px, `--shadow`. Arriba la banda navy con "ISTSGA" en oro y "Propiedad del instituto" en `ink-on-navy`, mayúsculas espaciadas. Debajo, código grande tabular (`code`) y "Patrimonial …" en `ink-2`, con el QR (generado desde `qr_token`) de 68px en marco blanco de 2px a la derecha. Bajo 560px el QR miniatura se reemplaza por el botón "Ver código" (76px, icono QR sobre el texto, fondo blanco, texto azul) que abre una ventana (`<dialog>`) con la placa ampliada: banda navy, código, patrimonial, QR de hasta 240px, nombre y botón "Cerrar"; se cierra también con Escape o tocando el fondo, y el foco vuelve al botón. Luego nombre en serif, modelo y serie, metadatos con iconos de trazo (ubicación, próximo mantenimiento; alerta en `warn` 600), sellos de estado, línea de corte punteada con "Ver ficha" (despliega una lista de definición con cifras tabulares) y "Reportar falla".
 
 - **Sello de estado:** plano y derecho, borde de 2px en `currentColor`, radio 3px, fondo blanco, mayúsculas 0.8125rem 700 +0.1em. Texto del vocabulario del esquema: Operativo, Con fallas, En mantenimiento, Inoperativo, Prestado, En bodega, De baja.
 - **Vínculo agenda-etiqueta:** pasar el mouse por la agenda no afecta a las etiquetas. Solo al pulsar un chip de código, la página se desplaza a la etiqueta centrada; recién ahí se eleva 4px con `--shadow-lift` y contorno oro de 3px, con un halo oro de 10px que se desvanece en 1400ms, y vuelve al reposo a los 2.6s. Con movimiento reducido, sin desplazamiento ni elevación.
 - **Etiqueta retirada** (`.tag--retired`): equipos con `estado_inventario = de_baja` o asignación cerrada (`fecha_devolucion` no nula). Misma anatomía, pero banda gris `#5b6873`, fondo `#eef0f2`, borde discontinuo, sin sombra y QR al 45%. La banda dice "Dado de baja" o "Asignación cerrada"; los sellos usan `bad` (De baja) o `ink-2` (Devuelto, Inoperativo). Viven en el bloque "Ya no están a tu cargo", debajo de "Mis equipos".
+
+### Panel de gestión (administrador, inventario, técnico)
+Layout propio (`layouts/panel.php`, `panel.css`), pensado primero para celular. La página del docente conserva el encabezado superior.
+- **Barra lateral:** navy, 264px, cerrada a la derecha por la regla oro de 4px. Marca arriba, módulos agrupados con rótulo en mayúsculas espaciadas (0.75rem), enlaces sans 600 de 44px con icono; la página actual lleva fondo blanco al 10% y barra oro vertical de 3px. Abajo, avatar oro, nombre, rol y cerrar sesión. Los módulos se declaran en `app/helpers/Menu.php`.
+- **Celular y tablet (hasta 900px):** barra superior navy de 60px con regla oro, botón de menú de 44px y marca. La barra lateral entra desde la izquierda sobre un velo navy al 50%; se cierra con el botón, el velo o Escape.
+- **Cabecera de página:** título serif con barra oro, nota en `ink-2` y, si corresponde, un solo botón primario (a todo el ancho en celular).
+- **Listados:** buscador + chips de filtro (enlaces; activo en navy). Cada registro es una tarjeta con rótulo y valor; a partir de 600px de ancho de contenido van en dos columnas y desde 880px pasan a tabla real (consulta de contenedor, no de pantalla). Acciones como botones-enlace tras línea punteada.
+- **Sello de registro:** mismo sello plano de la placa; `Activo` en `ok`, `Inactivo` en `ink-2`.
+- **Formularios:** en página aparte, panel blanco de hasta 640px, un campo por fila, obligatorios con `*` rojo y opcionales rotulados; error bajo cada campo. Guardar es primario; Cancelar es botón de texto.
+- **Confirmación:** ventana `<dialog>` para desactivar, con botón rojo (`bad`) y Cancelar con el foco inicial.
 
 ## Do's and Don'ts
 
