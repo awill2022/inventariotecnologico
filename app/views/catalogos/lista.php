@@ -68,7 +68,7 @@ $hayFiltro = $q !== '' || $estado !== 'todos';
                 <?php if ($puedeEditar): ?>
                     <p>Usa el botón «<?= View::e($def['nuevo']) ?>» para empezar.</p>
                 <?php else: ?>
-                    <p>El administrador del sistema es quien las registra.</p>
+                    <p><?= View::e($def['vacio_nota'] ?? 'El administrador del sistema es quien las registra.') ?></p>
                 <?php endif; ?>
             <?php endif; ?>
         </div>
@@ -107,11 +107,19 @@ $hayFiltro = $q !== '' || $estado !== 'todos';
                             $clase = trim(($n === 0 ? 'principal ' : '') . (!empty($col['numero']) ? 'num' : ''));
                             ?>
                             <?php if ($n === 0): ?>
-                                <th scope="row" class="<?= $clase ?>"><?= View::e((string) $valor) ?></th>
+                                <th scope="row" class="<?= $clase ?>">
+                                    <?php if (!empty($def['enlace'])): ?>
+                                        <a href="<?= View::url(str_replace('{id}', (string) $fila['id'], $def['enlace'])) ?>"><?= View::e((string) $valor) ?></a>
+                                    <?php else: ?>
+                                        <?= View::e((string) $valor) ?>
+                                    <?php endif; ?>
+                                </th>
                             <?php else: ?>
                                 <td data-label="<?= View::e($col['titulo']) ?>" <?= $clase ? "class=\"$clase\"" : '' ?>>
                                     <?php if ($vacio): ?>
                                         <span class="sin-dato" aria-label="Sin dato">—</span>
+                                    <?php elseif (isset($col['alerta']) && $fila['activo'] && !empty($fila[$col['alerta']['clave']])): ?>
+                                        <span class="valor-alerta"><?= View::e((string) $valor) ?><span class="sr-only"> (<?= View::e($col['alerta']['texto']) ?>)</span></span>
                                     <?php else: ?>
                                         <?= View::e((string) $valor) ?>
                                     <?php endif; ?>

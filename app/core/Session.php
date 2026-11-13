@@ -31,6 +31,14 @@ final class Session
         $_SESSION[$key] = $value;
     }
 
+    /** Lee un valor y lo borra de la sesión. */
+    public static function pull(string $key, mixed $default = null): mixed
+    {
+        $value = $_SESSION[$key] ?? $default;
+        unset($_SESSION[$key]);
+        return $value;
+    }
+
     public static function regenerate(): void
     {
         session_regenerate_id(true);

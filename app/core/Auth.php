@@ -70,6 +70,35 @@ final class Auth
         return App::config('home_por_rol', [])[self::rol()] ?? null;
     }
 
+    /**
+     * Envía al login recordando la página pedida (solo GET), para volver a ella al entrar.
+     * La ruta se guarda en la sesión del servidor: no viaja en la URL y no sirve para redirigir afuera.
+     */
+    public static function pedirLogin(string $mensaje, ?string $volverA = null): never
+    {
+        if ($volverA === null && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') {
+            $consulta = (string) ($_SERVER['QUERY_STRING'] ?? '');
+            $volverA  = App::path() . ($consulta !== '' ? "?$consulta" : '');
+        }
+        if ($volverA !== null) {
+            Session::set('tras_login', $volverA);
+        }
+        Session::flash('error', $mensaje);
+        header('Location: ' . View::url('/login'));
+        exit;
+    }
+
+    /** Página guardada por pedirLogin(), si es una ruta interna válida. Se borra al leerla. */
+    public static function tomarDestino(): ?string
+    {
+        $ruta = Session::pull('tras_login');
+        if (!is_string($ruta) || !str_starts_with($ruta, '/') || str_starts_with($ruta, '//')
+            || str_contains($ruta, '\\') || in_array(strtok($ruta, '?'), ['/login', '/logout', '/'], true)) {
+            return null;
+        }
+        return $ruta;
+    }
+
     /** Rutas que se pueden usar mientras la clave sea temporal. */
     private const RUTAS_CLAVE_TEMPORAL = ['/perfil', '/perfil/clave', '/logout'];
 
@@ -81,9 +110,7 @@ final class Auth
     public static function requireRole(array $roles): void
     {
         if (!self::check()) {
-            Session::flash('error', 'Inicia sesión para continuar.');
-            header('Location: ' . View::url('/login'));
-            exit;
+            self::pedirLogin('Inicia sesión para continuar.');
         }
         if (self::debeCambiarClave() && !in_array(App::path(), self::RUTAS_CLAVE_TEMPORAL, true)) {
             header('Location: ' . View::url('/perfil'));

@@ -1,0 +1,174 @@
+/* ==========================================================================
+   qr.css — Página pública del QR (/q/{token}) y su formulario de falla.
+   Se abre casi siempre desde un celular que acaba de escanear la etiqueta:
+   mobile first, una columna y la ficha con el aspecto de la etiqueta patrimonial.
+   ========================================================================== */
+
+.qr-pagina {
+  display: grid;
+  gap: var(--s-4);
+  max-width: 760px;
+  padding-block: var(--s-5) var(--s-8);
+}
+.qr-pagina > .notice { margin: 0; }
+
+/* ---------- Etiqueta ---------- */
+.qr-etiqueta {
+  overflow: hidden;
+  border: 1px solid #c3cbd2;
+  border-radius: var(--radius);
+  background: #f6f7f8;
+  box-shadow: var(--shadow);
+}
+
+.qr-banda {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: 6px var(--s-4);
+  background: var(--navy);
+  color: var(--gold);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.qr-banda span:last-child { color: var(--ink-on-navy); letter-spacing: 0.08em; text-align: right; }
+
+.qr-cabecera { display: grid; gap: var(--s-1); padding: var(--s-5) var(--s-4) var(--s-4); }
+.qr-codigo {
+  font: 700 1.75rem/1.1 var(--sans);
+  color: var(--navy-900);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.qr-patr { font-size: 0.875rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.qr-nombre { margin-top: var(--s-3); font-size: 1.5rem; }
+.qr-modelo { color: var(--ink-2); }
+
+.qr-sellos { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-3); }
+.qr-sello {
+  display: inline-flex;
+  padding: 3px 10px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  background: var(--panel);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.qr-sello--ok { color: var(--ok); }
+.qr-sello--warn { color: var(--warn); }
+.qr-sello--maint { color: var(--maint); }
+.qr-sello--bad { color: var(--bad); }
+.qr-sello--muted { color: var(--ink-2); }
+
+.qr-nota {
+  display: flex;
+  gap: var(--s-2);
+  align-items: flex-start;
+  margin: 0 var(--s-4) var(--s-4);
+  padding: var(--s-3);
+  border-radius: var(--radius-sm);
+  background: var(--maint-50);
+  color: var(--blue-700);
+  font-weight: 600;
+}
+.qr-nota .icon { flex: none; margin-top: 2px; }
+.qr-nota--bad { background: var(--bad-50); color: #7d1a14; }
+
+/* Datos con icono: una columna en el celular, dos desde tableta */
+.qr-datos {
+  display: grid;
+  gap: var(--s-4);
+  margin: 0;
+  padding: var(--s-4);
+  border-top: 1px dashed #c3cbd2;
+  background: var(--panel);
+}
+.qr-dato {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  column-gap: var(--s-3);
+}
+.qr-dato .icon { grid-row: span 2; width: 20px; height: 20px; margin-top: 2px; color: var(--navy-700); }
+.qr-dato dt { color: var(--ink-2); font-size: 0.875rem; }
+.qr-dato dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+.qr-dato-sub { display: block; color: var(--ink-2); font-size: 0.875rem; font-weight: 400; }
+.qr-sin-dato { color: var(--ink-2); font-weight: 400; }
+
+.qr-subtitulo {
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+  font-size: 1.25rem;
+}
+.qr-subtitulo .icon { width: 20px; height: 20px; color: var(--navy-700); }
+
+.qr-specs {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border-top: 1px solid var(--line-2);
+  background: var(--panel);
+}
+.qr-specs dl { display: grid; margin: 0; }
+.qr-specs dl > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, 40%) minmax(0, 1fr);
+  gap: var(--s-3);
+  padding-block: var(--s-2);
+  border-bottom: 1px solid var(--line-2);
+}
+.qr-specs dl > div:last-child { border-bottom: 0; }
+.qr-specs dt { color: var(--ink-2); }
+.qr-specs dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+
+/* ---------- Acciones ---------- */
+.qr-acciones { display: grid; gap: var(--s-3); padding: var(--s-5); }
+.qr-acciones p { color: var(--ink-2); }
+.qr-botones { display: grid; gap: var(--s-2); margin-top: var(--s-2); }
+.qr-botones .btn { width: 100%; }
+
+/* ---------- Formulario de falla desde el QR ---------- */
+.qr-volver {
+  display: inline-flex;
+  gap: var(--s-2);
+  align-items: center;
+  justify-self: start;
+  min-height: 44px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.qr-volver:hover { text-decoration: underline; }
+.qr-volver .icon { width: 18px; height: 18px; }
+
+.qr-reporte { padding: var(--s-5); }
+.qr-reporte .notice { margin-top: var(--s-4); }
+
+.qr-equipo-fijo {
+  display: grid;
+  gap: 2px;
+  margin-top: var(--s-5);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid #e6d3a6;
+  border-radius: var(--radius-sm);
+  background: var(--gold-50);
+}
+.qr-equipo-codigo { font-weight: 700; color: var(--navy-900); letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
+.qr-equipo-nombre { font: 700 1.125rem/1.25 var(--serif); color: var(--navy); }
+.qr-equipo-modelo { color: var(--ink-2); font-size: 0.9375rem; }
+
+@media (min-width: 600px) {
+  .qr-pagina { padding-block: var(--s-6) var(--s-8); }
+  .qr-cabecera { padding-inline: var(--s-5); }
+  .qr-nota { margin-inline: var(--s-5); }
+  .qr-datos { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--s-5); }
+  .qr-specs { padding: var(--s-5); }
+  .qr-codigo { font-size: 2rem; }
+  .qr-nombre { font-size: 1.75rem; }
+  .qr-botones { display: flex; flex-wrap: wrap; }
+  .qr-botones .btn { width: auto; }
+  .qr-reporte { padding: var(--s-6); }
+}

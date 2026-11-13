@@ -1,0 +1,189 @@
+/* =====================================================================
+   equipos.css — Listado, formulario y ficha de equipos (mobile first).
+   Usa los tokens de base.css y las piezas de panel.css (tabla, chips, sellos).
+   ===================================================================== */
+
+/* ---------- Listado: buscador y filtros ---------- */
+.filtros-equipos { display: grid; gap: var(--s-3); }
+.filtros-equipos .buscar { max-width: 560px; }
+
+.mas-filtros {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.mas-filtros summary {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 44px;
+  padding: 0 var(--s-4);
+  font-weight: 700;
+  color: var(--navy);
+  cursor: pointer;
+  list-style: none;
+}
+.mas-filtros summary::-webkit-details-marker { display: none; }
+.mas-filtros summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin-left: auto;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  rotate: 45deg;
+  translate: 0 -2px;
+  transition: rotate 160ms ease;
+}
+.mas-filtros[open] summary::after { rotate: 225deg; translate: 0 2px; }
+.mas-filtros summary .icon { width: 18px; height: 18px; }
+.mas-filtros-campos {
+  display: grid;
+  gap: var(--s-4);
+  padding: var(--s-2) var(--s-4) var(--s-4);
+  border-top: 1px solid var(--line-2);
+}
+.mas-filtros-acciones { display: grid; gap: var(--s-2); }
+
+/* ---------- Listado: barra de conteo y selección ---------- */
+.lista-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+.seleccion { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); }
+.seleccion .btn { min-height: 44px; }
+
+.check { display: inline-flex; align-items: center; gap: var(--s-2); cursor: pointer; }
+.check input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+
+/* En celular cada fila es una tarjeta: la casilla va arriba a la derecha */
+.tabla-equipos tr { position: relative; }
+.tabla-equipos .col-check { position: absolute; top: var(--s-3); right: var(--s-3); }
+.tabla-equipos .col-check .check { padding: var(--s-2); margin: calc(var(--s-2) * -1); }
+.tabla-equipos .principal { padding-right: 48px; }
+.tabla-equipos .principal a { color: inherit; text-decoration: none; }
+.tabla-equipos .principal a:hover { text-decoration: underline; }
+.tabla-equipos .principal a::after { content: ""; position: absolute; inset: 0; } /* toda la tarjeta abre la ficha */
+.tabla-equipos .col-check { z-index: 1; }
+.tabla .sub { display: block; color: var(--ink-2); font-size: 0.875rem; font-weight: 400; }
+/* En la tarjeta, la línea secundaria va bajo el valor, no en la columna del rótulo */
+.tabla td[data-label] .sub { grid-column: 2; }
+.tabla-equipos td[data-label] { row-gap: 2px; }
+
+/* ---------- Formulario por secciones ---------- */
+.form-equipo { max-width: 880px; }
+.form-grupo { display: grid; gap: var(--s-4); margin: 0; padding: 0; border: 0; min-width: 0; }
+.form-grupo + .form-grupo { padding-top: var(--s-5); border-top: 1px solid var(--line-2); }
+.form-grupo legend {
+  padding: 0;
+  margin-bottom: var(--s-4);
+  font: 700 1.1875rem/1.2 var(--serif);
+  color: var(--navy);
+}
+.form-grupo-campos { display: grid; gap: var(--s-4); }
+
+/* ---------- Ficha ---------- */
+.ficha-head { display: grid; gap: var(--s-4); }
+.ficha-codigo {
+  font: 700 1.5rem/1.1 var(--sans);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--navy-900);
+}
+.ficha-id { display: grid; gap: var(--s-1); }
+.ficha-id .sellos { margin-top: var(--s-2); }
+.ficha-acciones { display: grid; gap: var(--s-2); }
+.ficha-acciones form { margin: 0; }
+.ficha-acciones .btn { width: 100%; }
+.btn-text--danger { color: var(--bad); }
+.btn-text--danger:hover { color: #8f1e18; }
+
+.ficha { display: grid; gap: var(--s-4); }
+.ficha-seccion { display: grid; gap: var(--s-4); align-content: start; padding: var(--s-5); }
+.seccion-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); }
+
+.datos { display: grid; gap: var(--s-3); margin: 0; }
+.datos > div { display: grid; gap: 2px; }
+.datos dt { color: var(--ink-2); font-size: 0.875rem; }
+.datos dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+
+.ficha-nota { display: flex; gap: var(--s-2); align-items: center; color: var(--maint); font-weight: 600; }
+.ficha-nota .icon { width: 18px; height: 18px; }
+.texto-libre { white-space: normal; overflow-wrap: anywhere; }
+
+.componentes { display: grid; gap: var(--s-3); }
+.componente {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.componente.is-retirado { border-style: dashed; background: var(--ground); color: var(--ink-2); }
+.componente-tipo { font-weight: 700; color: var(--ink); }
+.componente-detalle { color: var(--ink-2); font-size: 0.9375rem; }
+.componente-acciones { display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-3); margin-left: calc(var(--s-2) * -1); }
+
+.retirados summary { cursor: pointer; color: var(--blue); font-weight: 600; min-height: 40px; display: flex; align-items: center; }
+.retirados .componentes { margin-top: var(--s-2); }
+
+.movimientos { display: grid; gap: var(--s-3); }
+.movimientos li { display: flex; gap: var(--s-3); align-items: flex-start; }
+.movimientos .icon { flex: none; width: 20px; height: 20px; margin-top: 2px; color: var(--navy-700); }
+.mov-titulo { font-weight: 600; }
+.mov-detalle { color: var(--ink-2); font-size: 0.9375rem; }
+
+/* ---------- Editor de especificaciones ---------- */
+.specs { display: grid; gap: var(--s-3); }
+.spec-fila {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+}
+.spec-fila .field label { font-size: 0.875rem; }
+.spec-quitar { justify-self: start; }
+.spec-fila.is-quitada { display: none; }
+
+@media (min-width: 600px) {
+  .mas-filtros-campos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mas-filtros-acciones { grid-column: 1 / -1; display: flex; }
+  .ficha-acciones { display: flex; flex-wrap: wrap; }
+  .ficha-acciones .btn { width: auto; }
+  .datos > div { grid-template-columns: 11rem minmax(0, 1fr); gap: var(--s-3); align-items: baseline; }
+  .componente { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .spec-fila { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) auto; align-items: end; padding: 0; border: 0; }
+  .spec-fila .field label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .spec-fila:first-of-type .field label { position: static; width: auto; height: auto; clip-path: none; }
+}
+
+@container page (min-width: 700px) {
+  .form-grupo-campos { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-5); }
+  .form-grupo-campos > .field:has(textarea) { grid-column: 1 / -1; }
+}
+
+@container page (min-width: 880px) {
+  .mas-filtros-campos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .tabla-equipos tr { position: static; }
+  .tabla-equipos .col-check { position: static; width: 44px; }
+  .tabla-equipos .principal { padding-right: var(--s-3); white-space: nowrap; }
+  .tabla-equipos .principal a::after { content: none; }
+  .ficha-head { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+  .ficha { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .ficha-ancha { grid-column: 1 / -1; }
+}
+
+@media print {
+  .ficha-acciones, .seccion-head .btn-link, .componente-acciones, .volver { display: none !important; }
+  .ficha-seccion { box-shadow: none; border: 1px solid var(--line); break-inside: avoid; }
+}

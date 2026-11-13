@@ -1,0 +1,91 @@
+/* =====================================================================
+   acta.css — Acta de entrega-recepción (A4, una hoja).
+   En pantalla: hoja blanca centrada. En papel: sin sombra ni barra.
+   Comparte la banda navy y la regla oro de las etiquetas patrimoniales.
+   ===================================================================== */
+
+.acta {
+  display: grid;
+  gap: 5mm;
+  max-width: 186mm;
+  margin: 0 auto;
+  padding: 10mm 12mm;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  font: 400 3.6mm/1.45 var(--sans);
+}
+
+.acta-banda {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4mm;
+  padding: 3mm 4mm;
+  background: var(--navy);
+  border-bottom: 1mm solid var(--gold);
+  color: var(--ink-on-navy);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.acta-banda img { width: 11mm; height: 11mm; }
+.acta-inst { font: 700 3.8mm/1.2 var(--serif); color: #fff; }
+.acta-unidad { font: 600 2.8mm/1.3 var(--sans); color: var(--gold); letter-spacing: 0.08em; text-transform: uppercase; }
+.acta-numero { font: 700 3.4mm/1 var(--sans); color: var(--gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.acta-titulo { font: 700 5.4mm/1.2 var(--serif); color: var(--navy); text-align: center; }
+.acta-lugar { text-align: right; color: var(--ink-2); }
+.acta-texto { text-wrap: pretty; }
+
+.acta-seccion { display: grid; gap: 2mm; break-inside: avoid; }
+.acta-seccion h3 {
+  font: 700 3.2mm/1.2 var(--sans);
+  color: var(--navy);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-bottom: 1mm;
+  border-bottom: 0.3mm solid var(--line);
+}
+
+.acta-datos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5mm 6mm; margin: 0; }
+.acta-datos div { display: grid; grid-template-columns: 32mm minmax(0, 1fr); gap: 2mm; }
+.acta-datos dt { color: var(--ink-2); }
+.acta-datos dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+
+.acta-specs { color: var(--ink-2); font-size: 3.2mm; }
+.acta-libre { white-space: pre-line; overflow-wrap: anywhere; }
+.acta-compromiso { padding: 3mm 4mm; background: var(--ground); border-left: 1mm solid var(--gold); font-size: 3.3mm; }
+
+.firmas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12mm; margin-top: 14mm; break-inside: avoid; }
+.firma { display: grid; gap: 0.5mm; padding-top: 2mm; border-top: 0.3mm solid var(--ink); text-align: center; }
+.firma-rol { font: 700 2.8mm/1.2 var(--sans); color: var(--ink-2); letter-spacing: 0.08em; text-transform: uppercase; }
+.firma-nombre { font-weight: 700; min-height: 1.45em; }
+.firma-cargo { color: var(--ink-2); font-size: 3.2mm; min-height: 1.45em; }
+
+.acta-devolucion { margin-top: 4mm; padding-top: 4mm; border-top: 0.5mm dashed var(--line); }
+
+.acta-pie {
+  display: flex;
+  justify-content: space-between;
+  gap: 4mm;
+  padding-top: 2mm;
+  border-top: 0.3mm solid var(--line-2);
+  color: var(--ink-2);
+  font-size: 2.8mm;
+}
+
+/* En celular la hoja se lee como una página normal */
+@media (max-width: 640px) {
+  .acta { padding: var(--s-4); font-size: 0.9375rem; }
+  .acta-banda { grid-template-columns: auto minmax(0, 1fr); }
+  .acta-numero { grid-column: 1 / -1; }
+  .acta-datos, .acta-datos div { grid-template-columns: minmax(0, 1fr); gap: 1mm; }
+  .acta-lugar { text-align: left; }
+  .firmas { gap: 8mm; }
+}
+
+@page { size: A4; margin: 14mm 12mm; }
+
+@media print {
+  .acta { max-width: none; padding: 0; box-shadow: none; font-size: 3.5mm; }
+}

@@ -18,10 +18,14 @@ abstract class CatalogoController extends Controller
      * Textos y columnas del catálogo:
      *   ruta, entidad (tabla, para auditoría), titulo, descripcion, singular,
      *   articulo (opcional, 'la' por defecto), nuevo (texto del botón),
-     *   columnas [clave, titulo, mapa?, formato? (método de Formato), numero?], vacio.
+     *   columnas [clave, titulo, mapa?, formato? (método de Formato), numero?,
+     *   alerta? [clave de una columna 0/1, texto]: el valor va en rojo si la columna vale 1;
+     *   el texto solo lo lee el lector de pantalla], vacio.
      *   Opcionales: buscar (placeholder del buscador), nota_creado (se agrega al aviso del alta),
+     *   vacio_nota (texto del listado vacío para quien no puede crear),
      *   aviso_desactivar (texto de la confirmación), acciones [texto, ruta con {id}, icono]
-     *   (enlaces extra por fila para quien puede editar).
+     *   (enlaces extra por fila para quien puede editar), enlace (ruta con {id}: la primera
+     *   columna enlaza a la ficha del registro).
      */
     abstract protected function def(): array;
 

@@ -5,13 +5,17 @@
  * Cada campo es un arreglo:
  *   nombre    => nombre del input y de la columna
  *   etiqueta  => texto del <label>
- *   tipo      => 'text' | 'textarea' | 'select' | 'password' | 'fijo'
- *                ('fijo' solo se muestra: no se lee del formulario ni se guarda)
+ *   tipo      => 'text' | 'textarea' | 'select' | 'password' | 'fecha' | 'fechahora' | 'numero' | 'fijo'
+ *                ('fijo' solo se muestra: no se lee del formulario ni se guarda;
+ *                 'fecha' espera AAAA-MM-DD; 'fechahora' espera AAAA-MM-DDTHH:MM (datetime-local)
+ *                 y devuelve 'AAAA-MM-DD HH:MM:00'; 'numero' es un decimal con hasta 2 decimales)
+ *   min_valor, max_valor => rango permitido (opcional): fechas 'AAAA-MM-DD', fecha y hora
+ *                'AAAA-MM-DD HH:MM' o números
  *   requerido => bool (opcional)
  *   min, max  => largo permitido en caracteres (opcional, para text/textarea/password)
  *   opciones  => [valor => texto] (obligatorio en select)
  *   entero    => bool: convierte el valor elegido a entero (select de llaves foráneas)
- *   formato   => 'cedula' | 'correo' | 'telefono' | 'usuario' (opcional, para text)
+ *   formato   => 'cedula' | 'correo' | 'telefono' | 'usuario' | 'prefijo' | 'codigo' (opcional, para text)
  *   politica  => bool: aplica la política de claves (password)
  *   igual_a   => nombre de otro campo password que debe coincidir (confirmación)
  */
@@ -23,6 +27,8 @@ final class Validador
         'correo'   => 'Escribe un correo válido, por ejemplo nombre@dominio.com.',
         'telefono' => 'Escribe solo números (7 a 15), con + al inicio si es internacional.',
         'usuario'  => 'Usa solo letras sin tildes, números y . _ - @ (sin espacios).',
+        'prefijo'  => 'Usa solo letras sin tildes y números (2 a 6), sin espacios.',
+        'codigo'   => 'Usa solo letras sin tildes, números y guiones, sin espacios.',
     ];
 
     /**
@@ -62,6 +68,18 @@ final class Validador
                 $limpio[$nombre] = null;
                 if (!empty($campo['requerido'])) {
                     $errores[$nombre] = $tipo === 'select' ? 'Elige una opción.' : 'Este campo es obligatorio.';
+                }
+                continue;
+            }
+
+            if ($tipo === 'fecha' || $tipo === 'fechahora' || $tipo === 'numero') {
+                [$limpio[$nombre], $error] = match ($tipo) {
+                    'fecha'     => self::fecha($campo, $valor),
+                    'fechahora' => self::fechaHora($campo, $valor),
+                    default     => self::numero($campo, $valor),
+                };
+                if ($error !== null) {
+                    $errores[$nombre] = $error;
                 }
                 continue;
             }
@@ -119,6 +137,7 @@ final class Validador
         return match ($formato) {
             'cedula', 'telefono' => preg_replace('/[\s-]/', '', $valor),
             'correo'             => mb_strtolower($valor),
+            'prefijo', 'codigo'  => strtoupper(str_replace(' ', '', $valor)),
             default              => $valor,
         };
     }
@@ -130,8 +149,60 @@ final class Validador
             'correo'   => filter_var($valor, FILTER_VALIDATE_EMAIL) !== false,
             'telefono' => (bool) preg_match('/^\+?\d{7,15}$/', $valor),
             'usuario'  => (bool) preg_match('/^[A-Za-z0-9._@-]+$/', $valor),
+            'prefijo'  => (bool) preg_match('/^[A-Z0-9]{2,6}$/', $valor),
+            'codigo'   => (bool) preg_match('/^[A-Z0-9]+(-[A-Z0-9]+)*$/', $valor),
             default    => true,
         };
+    }
+
+    /** Fecha AAAA-MM-DD real (el input type=date la envía así). @return array{0: ?string, 1: ?string} */
+    private static function fecha(array $campo, string $valor): array
+    {
+        $d = DateTimeImmutable::createFromFormat('!Y-m-d', $valor);
+        if (!$d || $d->format('Y-m-d') !== $valor) {
+            return [null, 'Escribe una fecha válida.'];
+        }
+        if (isset($campo['min_valor']) && $valor < $campo['min_valor']) {
+            return [$valor, 'La fecha no puede ser anterior al ' . Formato::fecha($campo['min_valor']) . '.'];
+        }
+        if (isset($campo['max_valor']) && $valor > $campo['max_valor']) {
+            return [$valor, 'La fecha no puede ser posterior al ' . Formato::fecha($campo['max_valor']) . '.'];
+        }
+        return [$valor, null];
+    }
+
+    /**
+     * Fecha y hora del input datetime-local (AAAA-MM-DDTHH:MM, a veces con segundos).
+     * Devuelve 'AAAA-MM-DD HH:MM:00', listo para una columna DATETIME. @return array{0: ?string, 1: ?string}
+     */
+    private static function fechaHora(array $campo, string $valor): array
+    {
+        $valor = substr(str_replace(' ', 'T', $valor), 0, 16);
+        $d = DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $valor);
+        if (!$d || $d->format('Y-m-d\TH:i') !== $valor) {
+            return [null, 'Escribe una fecha y hora válidas.'];
+        }
+        $normal = $d->format('Y-m-d H:i');
+        if (isset($campo['min_valor']) && $normal < substr($campo['min_valor'], 0, 16)) {
+            return [$normal . ':00', 'No puede ser anterior al ' . Formato::fechaHora($campo['min_valor']) . '.'];
+        }
+        if (isset($campo['max_valor']) && $normal > substr($campo['max_valor'], 0, 16)) {
+            return [$normal . ':00', 'No puede ser posterior al ' . Formato::fechaHora($campo['max_valor']) . '.'];
+        }
+        return [$normal . ':00', null];
+    }
+
+    /** Decimal positivo con hasta 2 decimales; admite coma decimal. @return array{0: ?string, 1: ?string} */
+    private static function numero(array $campo, string $valor): array
+    {
+        $valor = str_replace([' ', ','], ['', '.'], $valor);
+        if (!preg_match('/^\d{1,10}(\.\d{1,2})?$/', $valor)) {
+            return [null, 'Escribe un número sin signos, con hasta 2 decimales (por ejemplo 850.50).'];
+        }
+        if (isset($campo['max_valor']) && (float) $valor > $campo['max_valor']) {
+            return [$valor, 'El valor es demasiado grande.'];
+        }
+        return [$valor, null];
     }
 
     /** @return array{0: ?string, 1: ?string} [valor, error] */

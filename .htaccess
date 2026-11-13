@@ -1,0 +1,15 @@
+# Solo public/ se publica en la web. El código, los scripts SQL (traen las cuentas demo),
+# las subidas y el repositorio git no se sirven aunque el proyecto esté dentro de htdocs.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # La raíz del proyecto lleva a la aplicación
+    RewriteRule ^$ public/ [R=302,L]
+
+    # Carpetas internas, archivos ocultos (.git, .env...) y documentos del repositorio
+    RewriteRule ^(app|config|database|storage)(/|$) - [R=404,L]
+    RewriteRule (^|/)\. - [R=404,L]
+    RewriteRule \.(sql|md|log|ini)$ - [R=404,L]
+</IfModule>

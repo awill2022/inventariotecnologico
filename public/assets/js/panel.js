@@ -86,7 +86,7 @@
 
   document.querySelectorAll('form[data-form-validar]').forEach(function (form) {
     var campos = form.querySelectorAll(
-      'input[type="text"]:not([hidden]), input[type="password"], select, textarea'
+      'input[type="text"]:not([hidden]), input[type="password"], input[type="date"], input[type="datetime-local"], select, textarea'
     );
 
     campos.forEach(function (campo) {

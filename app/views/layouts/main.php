@@ -14,6 +14,7 @@ $scripts ??= [];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?php if (!empty($noindex)): ?><meta name="robots" content="noindex, nofollow"><?php endif; ?>
     <title><?= View::e($titulo ?? '') ?> | <?= View::e(App::config('app.name')) ?></title>
     <?php require APP_PATH . '/views/partials/head.php'; ?>
     <link rel="stylesheet" href="<?= View::asset('css/layout.css') ?>">

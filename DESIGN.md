@@ -285,6 +285,11 @@ Layout propio (`layouts/panel.php`, `panel.css`), pensado primero para celular. 
 - **Sello de registro:** mismo sello plano de la placa; `Activo` en `ok`, `Inactivo` en `ink-2`.
 - **Formularios:** en página aparte, panel blanco de hasta 640px, un campo por fila, obligatorios con `*` rojo y opcionales rotulados; error bajo cada campo. Guardar es primario; Cancelar es botón de texto.
 - **Confirmación:** ventana `<dialog>` para desactivar, con botón rojo (`bad`) y Cancelar con el foco inicial.
+- **Indicadores:** tarjetas blancas con número sans 700 de 1.5rem y rótulo en `ink-2`; cada una enlaza a su listado. El número solo toma el color de su estado (`warn`, `bad`, `maint`) cuando hay algo pendiente; en cero queda en `ink`.
+- **Dashboard del inicio** (`dashboard.css`): tableros blancos con título serif y enlace a la derecha; dos columnas desde 880px de contenido. En celular el total de equipos va solo arriba y los demás indicadores en pares.
+- **Barras:** HTML y CSS, sin librería. Nombre (sans 600) y número con porcentaje en la misma línea, y debajo una pista de 8px en `line-2` con el relleno del color del estado (`ok`, `warn`, `maint`, `bad`; `ink-2` aclarado para *en bodega*; `navy-700` para categorías y sedes). El número siempre va en texto: la barra es solo apoyo visual (`aria-hidden`). Cada barra filtrable es un enlace.
+- **Agenda:** bloque de fecha (día grande, mes en versalitas) con borde `line`; si está atrasado, borde, texto y fondo en `bad` y sello «Atrasado».
+- **Evento de auditoría** (`auditoria.css`): tarjeta con sello de la acción (Alta `ok`, Cambio `maint`, Cierre `ink-2`, Anulación `bad`), fecha relativa, frase «Modificó el equipo» con el registro enlazado y autor. *Ver detalle* abre una lista campo–valor sobre `ground`; la IP y el navegador van aparte, con borde punteado.
 
 ## Do's and Don'ts
 

@@ -1,0 +1,2 @@
+# Carpeta privada: los archivos subidos solo se entregan por el controlador (/archivos/{id}).
+Require all denied
