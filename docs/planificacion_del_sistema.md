@@ -45,6 +45,7 @@ Decisiones del usuario (2026-11-11):
 | `001_equipos_baja.sql` | `equipos.fecha_baja DATE NULL`, `equipos.motivo_baja VARCHAR(255) NULL` | Registrar la baja |
 | `002_usuarios_cambio_clave.sql` | `usuarios.debe_cambiar_clave BOOLEAN DEFAULT FALSE` | Forzar cambio tras un restablecimiento |
 | `003_repuestos_stock.sql` | `repuestos.stock DECIMAL(10,2) DEFAULT 0`, `repuestos.stock_minimo` | Controlar existencias |
+| `004_categorias_prefijo.sql` | `categorias.prefijo VARCHAR(6) NULL UNIQUE` | Proponer el código del equipo: `EQ-{PREFIJO}-{número}` (Sprint 3) |
 
 ### Piezas existentes que se reutilizan
 
@@ -113,17 +114,20 @@ Núcleo MVC, login, página `/docente`, datos demo.
 ### Sprint 6 — Archivos y página del QR
 1. Subida de archivos: validar tipo con `finfo`, tamaño máximo, nombre aleatorio, carpeta fuera de `public/`.
 2. Descarga por controlador con control de rol.
-3. Galería y documentos en la ficha del equipo.
-4. Adjuntos en asignación (acta), mantenimiento y movimiento.
-5. Ruta `/q/{qr_token}`: sin sesión muestra datos básicos (nombre, código, estado); con sesión redirige a la ficha según el rol.
+3. Fotos de la falla en el reporte del docente (hasta 3, cámara o galería, reducidas en el navegador); el técnico las ve en el mantenimiento.
+4. Adjuntos en asignación (acta firmada) y movimiento (respaldo).
+5. Ruta `/q/{qr_token}` pública: ficha técnica + responsable y último mantenimiento; «Reportar una falla» pide iniciar sesión y solo lo envía el docente a cargo; los roles del panel ven el enlace a la ficha.
+6. Lector QR con la cámara en la página del docente (foto del código como alternativa).
+- Quedó fuera (decisión del usuario): galería y documentos en la ficha del equipo; adjuntos subidos por el técnico en el mantenimiento.
 
 ### Sprint 7 — Dashboard, auditoría y cierre
-1. Dashboard por rol: equipos por estado, fallas pendientes, mantenimientos próximos, garantías por vencer.
-2. Visor de `auditoria` con filtros (usuario, entidad, acción, fechas).
-3. Ampliar `seed_demo.sql` para cubrir todos los módulos.
-4. Recorrido completo por rol, vista móvil y accesibilidad.
-5. Revisión de seguridad (CSRF en todo POST, acceso por rol, escape de salida) y `debug = false`.
-6. Actualizar `DESIGN.md` y escribir un README de instalación.
+1. Dashboard arriba del inicio de administrador e inventario: indicadores, equipos por funcionamiento e inventario, por categoría y por sede, agenda de mantenimientos (atrasados y próximos 30 días) y, solo para el administrador, actividad reciente. El técnico conserva su inicio de soporte.
+2. Visor de `auditoria` (solo administrador) con filtros por acción, usuario, módulo y fechas; cambios legibles «campo: antes → después»; los inicios de sesión se ocultan salvo que se pidan. Enlace *Historial de cambios* en la ficha del equipo.
+3. Ampliar `datos_demostracion.sql`: segunda sede, categoría Redes, 5 equipos más, agenda con fechas relativas a hoy y auditoría de ejemplo.
+4. Recorrido por rol y vista móvil a 375 px del dashboard y del visor.
+5. Revisión de seguridad: CSRF en los 49 POST, acceso por rol de las rutas nuevas, `.htaccess` en la raíz (el SQL y `.git` se podían descargar), cabeceras de seguridad, página de error genérica y `debug = false`.
+6. Actualizar `DESIGN.md` y el README.
+- Quedó fuera (decisión del usuario): garantías por vencer en el dashboard.
 
 ## Verificación
 

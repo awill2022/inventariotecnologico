@@ -8,7 +8,7 @@ const DB_HOST = 'localhost';
 const DB_NAME = 'inventario_tecnologico';
 const DB_USER = 'root';
 const DB_PASS = '';
-const DB_PORT = 3306;
+const DB_PORT = 3307;
 // ============ CONEXIÓN A BASE DE DATOS ============
 function db(): PDO {
     static $pdo = null;

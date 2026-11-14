@@ -87,7 +87,7 @@
   color: var(--ink-2);
   cursor: pointer;
 }
-.toggle-pass:hover:not(:disabled) { color: var(--blue); background: rgba(0, 76, 130, 0.08); }
+@media (hover: hover) and (pointer: fine) { .toggle-pass:hover:not(:disabled) { color: var(--blue); background: rgba(0, 76, 130, 0.08); } }
 .toggle-pass:disabled { cursor: not-allowed; opacity: 0.5; }
 
 .login-form .btn-primary { min-height: 48px; }

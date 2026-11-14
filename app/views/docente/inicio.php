@@ -12,8 +12,6 @@
  * @var string $csrf
  */
 $total   = count($etiquetas);
-$errores = $reporte['errores'];
-$old     = $reporte['old'] + ['equipo' => '', 'problema' => '', 'uso' => 'con_fallas'];
 $e       = [View::class, 'e'];
 ?>
 
@@ -46,7 +44,7 @@ $e       = [View::class, 'e'];
                            placeholder="Código, patrimonial o serie" aria-describedby="buscar-ayuda">
                 </div>
                 <button class="btn btn-gold" type="submit">Buscar</button>
-                <button class="btn btn-ghost-light" type="button" id="btn-qr" aria-label="Escanear código QR">
+                <button class="btn btn-ghost-light" type="button" id="btn-qr" aria-label="Escanear código QR" aria-haspopup="dialog">
                     <svg class="icon" aria-hidden="true"><use href="#i-qr"/></svg>
                     <span aria-hidden="true">QR</span>
                 </button>
@@ -179,6 +177,24 @@ $avisos = trim(ob_get_clean());
     </div>
 </section>
 
+<!-- Lector de QR (lector-qr.js): abre la cámara, lee la etiqueta y lleva a su página /q/{token} -->
+<dialog class="qr-dialog lector" id="lector-qr" aria-labelledby="lector-titulo" data-base-qr="<?= $e(View::url('/q/')) ?>">
+    <div class="lector-body">
+        <h2 class="lector-titulo" id="lector-titulo">Escanear la etiqueta</h2>
+        <div class="lector-video" data-lector-camara hidden>
+            <video playsinline muted aria-label="Vista de la cámara"></video>
+            <span class="lector-marco" aria-hidden="true"></span>
+        </div>
+        <p class="lector-estado" id="lector-estado" role="status">Apunta la cámara al código QR de la etiqueta.</p>
+        <label class="btn btn-outline btn-block fotos-boton" data-lector-foto hidden>
+            <svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg>
+            Tomar foto del código
+            <input type="file" accept="image/*" capture="environment" data-lector-archivo>
+        </label>
+        <button class="btn btn-primary btn-block" type="button" data-cerrar-lector>Cancelar</button>
+    </div>
+</dialog>
+
 <!-- ============ REPORTAR FALLA + HISTORIAL ============ -->
 <div class="wrap split">
     <section class="panel" id="reportar" aria-labelledby="t-reportar" tabindex="-1">
@@ -201,53 +217,7 @@ $avisos = trim(ob_get_clean());
         <?php if (!$total): ?>
             <p class="report-empty">Podrás reportar fallas cuando tengas equipos a tu cargo.</p>
         <?php else: ?>
-            <form class="report" id="form-reporte" method="POST" action="<?= View::url('/docente/reportar') ?>" novalidate>
-                <input type="hidden" name="_csrf" value="<?= $e($csrf) ?>">
-
-                <div class="field">
-                    <label for="r-equipo">Equipo</label>
-                    <select id="r-equipo" name="equipo" required aria-describedby="e-equipo"
-                            <?= isset($errores['equipo']) ? 'aria-invalid="true"' : '' ?>>
-                        <option value="">Selecciona un equipo…</option>
-                        <?php foreach ($etiquetas as $t): ?>
-                            <option value="<?= (int) $t['id'] ?>" <?= (string) $old['equipo'] === (string) $t['id'] ? 'selected' : '' ?>>
-                                <?= $e($t['codigo'] . ' · ' . $t['nombre']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                    <p class="field-error" id="e-equipo" <?= isset($errores['equipo']) ? '' : 'hidden' ?>>
-                        <?= $e($errores['equipo'] ?? 'Elige el equipo que presenta la falla.') ?>
-                    </p>
-                </div>
-
-                <div class="field">
-                    <label for="r-problema">¿Qué está pasando?</label>
-                    <textarea id="r-problema" name="problema" rows="4" required minlength="15" maxlength="2000"
-                              aria-describedby="h-problema e-problema"
-                              <?= isset($errores['problema']) ? 'aria-invalid="true"' : '' ?>
-                              placeholder="Ej.: la pantalla se apaga sola después de 10 minutos de uso."><?= $e($old['problema']) ?></textarea>
-                    <p class="field-help" id="h-problema">Describe qué ocurre, desde cuándo y qué estabas haciendo.</p>
-                    <p class="field-error" id="e-problema" <?= isset($errores['problema']) ? '' : 'hidden' ?>>
-                        <?= $e($errores['problema'] ?? 'Cuéntanos qué ocurre (al menos 15 caracteres).') ?>
-                    </p>
-                </div>
-
-                <fieldset class="field">
-                    <legend>¿Puedes seguir usándolo?</legend>
-                    <div class="radios">
-                        <label class="radio"><input type="radio" name="uso" value="con_fallas" <?= $old['uso'] !== 'inoperativo' ? 'checked' : '' ?>> Sí, con limitaciones</label>
-                        <label class="radio"><input type="radio" name="uso" value="inoperativo" <?= $old['uso'] === 'inoperativo' ? 'checked' : '' ?>> No, no funciona</label>
-                    </div>
-                    <?php if (isset($errores['uso'])): ?>
-                        <p class="field-error"><?= $e($errores['uso']) ?></p>
-                    <?php endif; ?>
-                </fieldset>
-
-                <div class="report-actions">
-                    <button class="btn btn-primary" type="submit" id="btn-reportar">Enviar reporte</button>
-                    <button class="btn btn-text" type="reset">Limpiar</button>
-                </div>
-            </form>
+            <?php require APP_PATH . '/views/partials/reporte_falla.php'; ?>
         <?php endif; ?>
     </section>
 

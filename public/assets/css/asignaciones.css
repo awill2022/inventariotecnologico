@@ -1,0 +1,56 @@
+/* =====================================================================
+   asignaciones.css — Entregas, devoluciones y movimientos (Sprint 4):
+   listas de entregas en las fichas de equipo y de persona, tablas de
+   asignaciones y movimientos. Se carga junto con equipos.css.
+   ===================================================================== */
+
+/* ---------- Lista de entregas (fichas) ---------- */
+.entregas { display: grid; gap: var(--s-3); }
+.entrega {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+/* Igual que los componentes retirados: la entrega devuelta se ve apagada; la abierta ya lleva el sello «A su cargo» */
+.entrega.is-cerrada { border-style: dashed; background: var(--ground); color: var(--ink-2); }
+.entrega-titulo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1) var(--s-2); font-weight: 700; color: var(--ink); }
+.entrega-titulo a { color: inherit; }
+.entrega-detalle { color: var(--ink-2); font-size: 0.9375rem; overflow-wrap: anywhere; }
+.entrega .sellos { margin-top: var(--s-1); }
+.entrega-acciones { display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-3); margin-left: calc(var(--s-2) * -1); }
+
+/* ---------- Acciones de la sección "Ubicación y responsable" ---------- */
+.seccion-acciones { display: grid; gap: var(--s-2); }
+.seccion-acciones .btn { width: 100%; min-height: 44px; }
+.dato-sub { display: block; color: var(--ink-2); font-weight: 400; font-size: 0.875rem; }
+
+/* ---------- Tablas ---------- */
+.tabla-asignaciones a,
+.tabla-movimientos a { font-weight: 600; }
+.ruta { font-weight: 600; overflow-wrap: anywhere; }
+.filtro-activo { color: var(--ink-2); font-size: 0.9375rem; }
+.filtro-activo a { font-weight: 600; }
+
+@media (min-width: 600px) {
+  .entrega { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .entrega-acciones { margin-left: 0; justify-content: flex-end; }
+  .seccion-acciones { display: flex; flex-wrap: wrap; }
+  .seccion-acciones .btn { width: auto; }
+}
+
+@container page (min-width: 880px) {
+  .mas-filtros-campos--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tabla-asignaciones .principal,
+  .tabla-movimientos .principal { white-space: nowrap; }
+}
+
+@media print {
+  .seccion-acciones, .entrega-acciones { display: none !important; }
+}
+
+/* Datos en dos columnas cuando la sección ocupa todo el ancho (ficha de persona) */
+@container page (min-width: 880px) {
+  .datos--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-6, 2.5rem); }
+}

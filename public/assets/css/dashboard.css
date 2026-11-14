@@ -1,0 +1,130 @@
+/* =====================================================================
+   dashboard.css — Dashboard del inicio de administrador e inventario (Sprint 7).
+   Indicadores (panel.css), tableros con barras horizontales en HTML/CSS,
+   agenda de mantenimientos y actividad reciente.
+   Mobile first: un tablero por fila; dos columnas desde 880 px de contenido.
+   ===================================================================== */
+
+.dashboard { display: grid; gap: var(--s-4); }
+
+/* Título del tablero con su enlace a la derecha (equipos.css no se carga en el inicio) */
+.tablero .seccion-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-1) var(--s-3); }
+
+.tablero {
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+  min-width: 0;
+  padding: var(--s-4);
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.tablero > .section-note { margin-top: calc(var(--s-2) * -1); font-size: 0.9375rem; }
+.tablero-sub {
+  margin-top: var(--s-2);
+  color: var(--ink-2);
+  font: 700 0.8125rem/1.2 var(--sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.tablero-sub span { font-weight: 400; letter-spacing: 0; text-transform: none; font-size: 0.875rem; }
+.tablero-vacio { color: var(--ink-2); }
+.tablero-mas { color: var(--ink-2); font-size: 0.9375rem; }
+
+/* ---------- Barras: nombre y número arriba, la barra debajo ---------- */
+.barras { display: grid; gap: var(--s-1); }
+.barra {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px var(--s-3);
+  padding: 6px var(--s-2);
+  margin-inline: calc(var(--s-2) * -1);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  text-decoration: none;
+}
+a.barra { transition: background-color var(--dur-rapida) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { a.barra:hover { background: #f3f5f7; color: var(--ink); } }
+@media (hover: hover) and (pointer: fine) { a.barra:hover .barra-nombre { color: var(--blue); text-decoration: underline; } }
+.barra-nombre { min-width: 0; overflow-wrap: anywhere; font-weight: 600; }
+.barra-valor { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink-2); font-size: 0.875rem; }
+.barra-valor strong { color: var(--ink); font-size: 1rem; margin-right: 6px; }
+.barra-pista {
+  grid-column: 1 / -1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--line-2);
+  overflow: hidden;
+}
+.barra-relleno { display: block; height: 100%; min-width: 0; border-radius: inherit; background: var(--navy-700); }
+.barra-relleno--ok    { background: var(--ok); }
+.barra-relleno--warn  { background: #c07a12; }
+.barra-relleno--maint { background: var(--maint); }
+.barra-relleno--bad   { background: var(--bad); }
+.barra-relleno--muted { background: #8796a1; }
+.barra-relleno--navy  { background: var(--navy-700); }
+.barra--vacia .barra-nombre,
+.barra--vacia .barra-valor strong { color: var(--ink-2); font-weight: 400; }
+
+/* ---------- Agenda de mantenimientos ---------- */
+.agenda { display: grid; }
+.agenda-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-1) var(--s-3);
+  align-items: start;
+  padding: var(--s-3) 0;
+}
+.agenda-item + .agenda-item { border-top: 1px solid var(--line-2); }
+.agenda-fecha {
+  display: grid;
+  justify-items: center;
+  width: 3.25rem;
+  padding: 4px 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--navy);
+  line-height: 1.1;
+}
+.agenda-fecha strong { font: 700 1.25rem/1.1 var(--sans); font-variant-numeric: tabular-nums; }
+.agenda-fecha span { font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.agenda-item--atrasado .agenda-fecha { border-color: var(--bad); color: var(--bad); background: var(--bad-50); }
+.agenda-texto { display: grid; gap: 2px; min-width: 0; }
+.agenda-texto a { font-weight: 700; overflow-wrap: anywhere; }
+.agenda-texto .sub { color: var(--ink-2); font-size: 0.875rem; overflow-wrap: anywhere; }
+.agenda-item > .sello { grid-column: 2; justify-self: start; }
+
+/* ---------- Actividad reciente ---------- */
+.actividad { display: grid; }
+.actividad li { display: grid; gap: 2px; padding: var(--s-3) 0; }
+.actividad li + li { border-top: 1px solid var(--line-2); }
+.actividad-quien { color: var(--ink-2); font-size: 0.875rem; }
+
+/* Los accesos a los módulos quedan debajo del dashboard, separados */
+.inicio-accesos { padding-top: var(--s-4); }
+
+@container page (min-width: 600px) {
+  .agenda-item { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; }
+  .agenda-item > .sello { grid-column: 3; }
+}
+
+/* En celular el total de equipos va solo arriba y los otros cuatro en pares */
+.dashboard-indicadores > li:first-child { grid-column: 1 / -1; }
+
+/* Los cinco indicadores en una sola fila cuando caben */
+@container page (min-width: 760px) {
+  .dashboard-indicadores { grid-template-columns: repeat(5, minmax(0, 1fr)); max-width: 1100px; }
+  .dashboard-indicadores > li:first-child { grid-column: auto; }
+}
+
+@container page (min-width: 880px) {
+  .dashboard { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 1100px; }
+  .tablero { padding: var(--s-5); }
+}
+
+@media print {
+  .tablero { box-shadow: none; border: 1px solid var(--line); break-inside: avoid; }
+  .barra-pista { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .inicio-accesos, .inicio-accesos ~ section { display: none; }
+}

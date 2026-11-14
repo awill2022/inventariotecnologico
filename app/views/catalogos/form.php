@@ -13,12 +13,16 @@
  * @var ?string $encabezado  título de la página
  * @var ?string $intro       párrafo bajo el título
  * @var ?string $boton       texto del botón de guardar
+ * @var ?string $aviso       advertencia destacada sobre el formulario
+ * @var ?array  $ocultos     [nombre => valor] que viajan con el formulario (p. ej. a dónde volver)
  */
 $ruta       = $def['ruta'];
 $accion   ??= $id ? "$ruta/$id" : $ruta;
 $encabezado ??= $id ? 'Editar ' . $def['singular'] : $def['nuevo'];
 $boton    ??= $id ? 'Guardar cambios' : 'Guardar';
 $intro    ??= null;
+$aviso    ??= null;
+$ocultos  ??= [];
 ?>
 <a class="volver" href="<?= View::url($ruta) ?>">
     <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
@@ -37,6 +41,13 @@ $intro    ??= null;
 
 <?php require APP_PATH . '/views/partials/flash.php'; ?>
 
+<?php if ($aviso): ?>
+    <div class="notice notice--warn" role="note">
+        <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+        <p><?= View::e($aviso) ?></p>
+    </div>
+<?php endif; ?>
+
 <?php if ($errores): ?>
     <div class="notice notice--error" role="alert">
         <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
@@ -46,6 +57,9 @@ $intro    ??= null;
 
 <form class="panel form" method="POST" action="<?= View::url($accion) ?>" novalidate data-form-validar>
     <input type="hidden" name="_csrf" value="<?= View::e($csrf) ?>">
+    <?php foreach ($ocultos as $oculto => $valorOculto): ?>
+        <input type="hidden" name="<?= View::e($oculto) ?>" value="<?= View::e((string) $valorOculto) ?>">
+    <?php endforeach; ?>
 
     <?php require APP_PATH . '/views/partials/campos.php'; ?>
 

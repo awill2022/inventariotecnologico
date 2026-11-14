@@ -34,6 +34,15 @@ abstract class Controller
     /** Corta la petición si el token CSRF del formulario no es válido. */
     protected function requireCsrf(): void
     {
+        // Si el envío supera post_max_size, PHP descarta el formulario entero (también el token)
+        if (Subida::envioDemasiadoGrande()) {
+            http_response_code(413);
+            View::render('errors/403', [
+                'titulo'  => 'Archivos demasiado grandes',
+                'mensaje' => 'Lo que intentaste enviar pesa demasiado. Vuelve atrás y adjunta archivos más livianos.',
+            ], 'auth');
+            exit;
+        }
         if (!Session::validCsrf($_POST['_csrf'] ?? null)) {
             http_response_code(403); // Apache convierte el 419 (no estándar) en 500
             View::render('errors/403', [

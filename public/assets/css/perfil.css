@@ -21,7 +21,7 @@
   text-decoration: none;
   justify-self: start;
 }
-.perfil--suelto .volver:hover { text-decoration: underline; }
+@media (hover: hover) and (pointer: fine) { .perfil--suelto .volver:hover { text-decoration: underline; } }
 
 /* ---------- Tarjetas ---------- */
 .perfil-grid { display: grid; gap: var(--s-4); align-items: start; }

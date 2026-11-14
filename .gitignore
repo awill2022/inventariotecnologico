@@ -1,0 +1,3 @@
+# Archivos subidos por los usuarios (fotos, actas): no van al repositorio
+/storage/archivos/*
+!/storage/archivos/.gitkeep

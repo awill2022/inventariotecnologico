@@ -1,7 +1,7 @@
 /**
  * docente.js — Página de inicio del rol consulta.
  * QR de cada etiqueta, ficha desplegable, búsqueda y filtros de "Mis equipos",
- * vínculo chip de código → etiqueta y validación del reporte de falla.
+ * vínculo chip de código → etiqueta y «Reportar falla» desde una etiqueta. El lector QR está en lector-qr.js.
  */
 document.addEventListener('DOMContentLoaded', function () {
   'use strict';
@@ -149,15 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ---------- 4. Botón "Escanear QR" ---------- */
-  var aviso = document.getElementById('qr-aviso');
-  document.getElementById('btn-qr').addEventListener('click', function () {
-    aviso.hidden = false;
-    aviso.textContent = 'El lector de QR desde el navegador llegará en una próxima versión. ' +
-                        'Por ahora escribe el código impreso junto al QR de la etiqueta.';
-    inputBuscar.focus();
-  });
-
   /* ---------- 5. Chip de código (EQ-…) → su etiqueta ----------
      Solo el clic lleva al equipo; al llegar, la etiqueta se eleva unos segundos. */
   var temporizador = null;
@@ -176,8 +167,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var reducido = prefiereMenosMovimiento();
       tag.scrollIntoView({ behavior: reducido ? 'auto' : 'smooth', block: 'center' });
       tag.focus({ preventScroll: true });
-      if (reducido) return;
 
+      // Con movimiento reducido el CSS anula la elevación; el resaltado dorado se mantiene
       tag.classList.add('is-linked');
       void tag.offsetWidth; // reinicia la animación
       tag.classList.add('is-flash');
@@ -187,14 +178,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* ---------- 6. "Reportar falla" desde una etiqueta ---------- */
+  /* ---------- 6. "Reportar falla" desde una etiqueta ----------
+     La validación y las fotos del formulario están en reporte.js. */
   var form = document.getElementById('form-reporte');
   if (!form) return;
 
   var selectEquipo = document.getElementById('r-equipo');
   var problema = document.getElementById('r-problema');
-  var botonEnviar = document.getElementById('btn-reportar');
-  var MIN_PROBLEMA = 15;
 
   document.querySelectorAll('[data-reportar]').forEach(function (enlace) {
     enlace.addEventListener('click', function (e) {
@@ -206,35 +196,5 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       problema.focus({ preventScroll: true });
     });
-  });
-
-  /* ---------- 7. Validación del reporte (el servidor valida de nuevo) ---------- */
-  form.addEventListener('submit', function (e) {
-    var errEquipo = selectEquipo.value === '' ? 'Elige el equipo que presenta la falla.' : '';
-    var errProblema = problema.value.trim().length < MIN_PROBLEMA
-      ? 'Cuéntanos qué ocurre (al menos ' + MIN_PROBLEMA + ' caracteres).' : '';
-
-    marcarError(selectEquipo, 'e-equipo', errEquipo);
-    marcarError(problema, 'e-problema', errProblema);
-
-    if (errEquipo || errProblema) {
-      e.preventDefault();
-      (errEquipo ? selectEquipo : problema).focus();
-      return;
-    }
-    botonEnviar.disabled = true;
-    botonEnviar.textContent = 'Enviando…';
-  });
-
-  form.addEventListener('reset', function () {
-    marcarError(selectEquipo, 'e-equipo', '');
-    marcarError(problema, 'e-problema', '');
-  });
-
-  selectEquipo.addEventListener('change', function () {
-    if (selectEquipo.value) marcarError(selectEquipo, 'e-equipo', '');
-  });
-  problema.addEventListener('input', function () {
-    if (problema.value.trim().length >= MIN_PROBLEMA) marcarError(problema, 'e-problema', '');
   });
 });

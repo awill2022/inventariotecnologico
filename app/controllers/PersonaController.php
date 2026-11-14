@@ -40,7 +40,27 @@ final class PersonaController extends CatalogoController
             'aviso_desactivar' => 'Ya no se le podrán entregar equipos y, si tiene cuenta de usuario, '
                                 . 'no podrá iniciar sesión. Su historial se conserva.',
             'columnas'    => $columnas,
+            'enlace'      => '/personas/{id}',
         ];
+    }
+
+    /** GET /personas/{id} — ficha con los equipos a cargo y el historial de entregas. */
+    public function ver(int $id): void
+    {
+        $persona = (new Persona())->ficha($id) ?? $this->notFound();
+        $asignaciones = (new Asignacion())->dePersona($id);
+        $puedeGestionar = in_array(Auth::rol(), $this->rolesEditar(), true);
+
+        $this->view('personas/ver', [
+            'titulo'         => $persona['nombre'],
+            'p'              => $persona,
+            'abiertas'       => array_values(array_filter($asignaciones, fn ($a) => $a['fecha_devolucion'] === null)),
+            'devueltas'      => array_values(array_filter($asignaciones, fn ($a) => $a['fecha_devolucion'] !== null)),
+            'puedeGestionar' => $puedeGestionar,
+            'verCuenta'      => Auth::rol() === 'administrador',
+            'verActas'       => in_array(Auth::rol(), AsignacionController::VER, true),
+            'estilos'        => ['equipos.css', 'asignaciones.css'],
+        ], 'panel');
     }
 
     protected function nombreDe(array $fila): string

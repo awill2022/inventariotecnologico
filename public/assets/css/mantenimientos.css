@@ -1,0 +1,173 @@
+/* =====================================================================
+   mantenimientos.css — Bandeja y ficha de mantenimientos (Sprint 5):
+   acciones del trabajo, informe, repuestos
+   usados con sus costos. Se carga junto con equipos.css y asignaciones.css.
+   Mobile first: todo apilado; se reparte en columnas con el ancho.
+   ===================================================================== */
+
+/* ---------- Inicio del técnico: reportes por atender y sus trabajos ---------- */
+.inicio-seccion { display: grid; gap: var(--s-3); padding-top: var(--s-4); }
+.inicio-seccion > .section-note { margin-top: calc(var(--s-2) * -1); }
+
+.tarjetas-reporte { display: grid; gap: var(--s-3); }
+.tarjeta-reporte {
+  display: grid;
+  gap: var(--s-2);
+  min-width: 0;
+  padding: var(--s-4);
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.tarjeta-reporte-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s-1) var(--s-3);
+  color: var(--ink-2);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+.tarjeta-reporte-numero { font-weight: 700; }
+.tarjeta-reporte-equipo { font: 700 1.125rem/1.3 var(--serif); color: var(--navy); overflow-wrap: anywhere; }
+.tarjeta-reporte-equipo .sub { display: block; font: 400 0.9375rem/1.4 var(--sans); color: var(--ink-2); }
+.tarjeta-reporte-problema { overflow-wrap: anywhere; }
+.tarjeta-reporte-quien { color: var(--ink-2); font-size: 0.9375rem; }
+.tarjeta-reporte-fotos { display: inline-flex; gap: 6px; align-items: center; color: var(--navy-700); font-size: 0.9375rem; font-weight: 600; }
+.tarjeta-reporte-fotos .icon { width: 18px; height: 18px; }
+.tarjeta-reporte-aviso {
+  padding: var(--s-2) var(--s-3);
+  background: var(--warn-50);
+  border-radius: var(--radius-sm);
+  color: #5c3500;
+  font-size: 0.9375rem;
+}
+.tarjeta-reporte-acciones { display: grid; gap: var(--s-2); margin-top: var(--s-1); }
+.tarjeta-reporte-acciones form { margin: 0; }
+.tarjeta-reporte-acciones .btn { width: 100%; min-height: 44px; }
+
+.lista-trabajos { display: grid; gap: var(--s-2); }
+.trabajo {
+  display: grid;
+  gap: var(--s-2);
+  min-height: 44px;
+  padding: var(--s-3) var(--s-4);
+  background: var(--panel);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color var(--dur-rapida) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) { .trabajo:hover { border-color: var(--blue); color: var(--ink); } }
+.trabajo-texto { display: grid; min-width: 0; }
+.trabajo-titulo { font-weight: 700; color: var(--navy); font-variant-numeric: tabular-nums; }
+.trabajo-tipo { font-weight: 400; color: var(--ink-2); }
+.trabajo-tipo::before { content: "· "; }
+.trabajo-nota { color: var(--ink-2); font-size: 0.9375rem; overflow-wrap: anywhere; }
+.trabajo-estado { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1) var(--s-3); }
+.trabajo-fecha { color: var(--ink-2); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+
+@media (min-width: 600px) {
+  .tarjeta-reporte-acciones { display: flex; flex-wrap: wrap; }
+  .tarjeta-reporte-acciones .btn { width: auto; }
+}
+
+@container page (min-width: 700px) {
+  .tarjetas-reporte { grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); }
+  .tarjeta-reporte { align-content: start; }
+  .trabajo { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--s-4); }
+  .trabajo-estado { justify-content: flex-end; text-align: right; }
+}
+
+/* ---------- Tabla de la bandeja ---------- */
+.tabla-mant a { font-weight: 600; }
+.tabla .sub--bad  { color: var(--bad); font-weight: 700; }
+.tabla .sub--warn { color: var(--warn); font-weight: 700; }
+.sin-asignar { color: var(--warn); font-weight: 600; }
+
+/* ---------- Acciones del trabajo ---------- */
+.form-iniciar,
+.form-asignar { display: grid; gap: var(--s-2); margin: 0; }
+.form-iniciar .btn,
+.form-asignar .btn { width: 100%; min-height: 44px; }
+.form-asignar { padding-top: var(--s-4); border-top: 1px solid var(--line-2); }
+
+/* ---------- Problema, otros reportes e informe ---------- */
+.otros-reportes { display: grid; gap: var(--s-2); padding-top: var(--s-4); border-top: 1px solid var(--line-2); }
+.reportes { display: grid; gap: var(--s-3); }
+.reportes li {
+  display: grid;
+  gap: 2px;
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid #ecd7b0;
+  background: var(--warn-50);
+  border-radius: var(--radius-sm);
+}
+.reportes a { font-weight: 700; }
+.reporte-texto { overflow-wrap: anywhere; }
+
+.informe { display: grid; gap: var(--s-4); }
+.informe-bloque { display: grid; gap: var(--s-1); }
+.informe-titulo { font: 700 1rem/1.3 var(--sans); color: var(--ink); }
+
+/* ---------- Repuestos y costos ---------- */
+/* Dentro de la ficha, las filas no son tarjetas con sombra: se separan con una línea */
+.tabla-caja--plana .tabla tbody { gap: 0; }
+.tabla-caja--plana .tabla tr {
+  padding: var(--s-3) 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  border-bottom: 1px solid var(--line-2);
+}
+.tabla-repuestos .principal { font-size: 1rem; }
+.tabla-repuestos .acciones { margin-left: calc(var(--s-2) * -1); }
+
+.totales { display: grid; gap: var(--s-1); margin: 0; justify-self: stretch; }
+.totales > div { display: flex; justify-content: space-between; gap: var(--s-4); }
+.totales dt { color: var(--ink-2); }
+.totales dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.totales-total { padding-top: var(--s-2); margin-top: var(--s-1); border-top: 2px solid var(--navy); }
+.totales-total dt, .totales-total dd { color: var(--navy); font-weight: 700; font-size: 1.0625rem; }
+
+.form-repuesto {
+  display: grid;
+  gap: var(--s-3);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-2);
+}
+.form-repuesto-campos { display: grid; gap: var(--s-4); align-items: start; }
+.form-repuesto-campos > .field { align-content: start; }
+.form-repuesto .form-acciones .btn { min-height: 44px; }
+
+@media (min-width: 600px) {
+  .form-iniciar,
+  .form-asignar { display: flex; flex-wrap: wrap; align-items: end; }
+  .form-iniciar .field,
+  .form-asignar .field { flex: 1 1 14rem; }
+  .form-iniciar .btn,
+  .form-asignar .btn { width: auto; }
+  .totales { max-width: 22rem; justify-self: end; width: 100%; }
+}
+
+@container page (min-width: 700px) {
+  .form-repuesto-campos { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1.4fr); column-gap: var(--s-4); }
+  .form-repuesto-campos > .field:last-child { grid-column: 1 / -1; }
+}
+
+@container page (min-width: 880px) {
+  .tabla-mant .principal { white-space: nowrap; }
+  /* La tabla de repuestos vuelve a ser tabla, sin el marco de las tablas sueltas */
+  .tabla-caja--plana { box-shadow: none; border-radius: 0; }
+  .tabla-caja--plana .tabla tr { padding: 0; border-bottom: 0; }
+  .tabla-caja--plana .tabla tr > :first-child { padding-left: 0; }
+  .tabla-caja--plana .tabla tr > :last-child { padding-right: 0; }
+  .tabla-repuestos .acciones { margin-left: 0; }
+}
+
+@media print {
+  .form-iniciar, .form-asignar, .form-repuesto { display: none !important; }
+}

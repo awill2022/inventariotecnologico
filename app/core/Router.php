@@ -4,7 +4,8 @@
  * y aplica el control de acceso por rol antes de ejecutarla.
  *
  * Admite parámetros entre llaves: '/categorias/{id}/editar'.
- * {id} solo acepta números; cualquier otro nombre acepta un tramo sin '/'.
+ * {id} y los nombres que terminan en _id ({componente_id}) solo aceptan números;
+ * cualquier otro nombre acepta un tramo sin '/'.
  * Los valores llegan a la acción como argumentos, en el orden de la ruta.
  */
 final class Router
@@ -37,7 +38,7 @@ final class Router
 
         $regex = preg_replace_callback(
             '/\\\\\{(\w+)\\\\\}/',
-            fn ($m) => $m[1] === 'id' ? '(\d+)' : '([^/]+)',
+            fn ($m) => $m[1] === 'id' || str_ends_with($m[1], '_id') ? '(\d+)' : '([^/]+)',
             preg_quote($path, '#')
         );
         $this->dynamic[$method][] = $route + ['regex' => '#^' . $regex . '$#'];

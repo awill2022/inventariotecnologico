@@ -6,16 +6,24 @@
 final class Menu
 {
     private const PANEL = ['administrador', 'inventario', 'tecnico'];
+    /** El técnico solo da soporte: no ve catálogos ni inventario. */
+    private const INVENTARIO = ['administrador', 'inventario'];
 
     /** grupo (null = sin título), texto, ruta, icono (id del sprite sin "i-"), roles. */
     private const ITEMS = [
         ['grupo' => null,        'texto' => 'Inicio',      'ruta' => '/panel',       'icono' => 'home',     'roles' => self::PANEL],
-        ['grupo' => 'Catálogos', 'texto' => 'Categorías',  'ruta' => '/categorias',  'icono' => 'tag',      'roles' => self::PANEL],
-        ['grupo' => 'Catálogos', 'texto' => 'Sedes',       'ruta' => '/sedes',       'icono' => 'building', 'roles' => self::PANEL],
-        ['grupo' => 'Catálogos', 'texto' => 'Áreas',       'ruta' => '/areas',       'icono' => 'network',  'roles' => self::PANEL],
-        ['grupo' => 'Catálogos', 'texto' => 'Ubicaciones', 'ruta' => '/ubicaciones', 'icono' => 'pin',      'roles' => self::PANEL],
+        ['grupo' => 'Catálogos', 'texto' => 'Categorías',  'ruta' => '/categorias',  'icono' => 'tag',      'roles' => self::INVENTARIO],
+        ['grupo' => 'Catálogos', 'texto' => 'Sedes',       'ruta' => '/sedes',       'icono' => 'building', 'roles' => self::INVENTARIO],
+        ['grupo' => 'Catálogos', 'texto' => 'Áreas',       'ruta' => '/areas',       'icono' => 'network',  'roles' => self::INVENTARIO],
+        ['grupo' => 'Catálogos', 'texto' => 'Ubicaciones', 'ruta' => '/ubicaciones', 'icono' => 'pin',      'roles' => self::INVENTARIO],
+        ['grupo' => 'Inventario', 'texto' => 'Equipos',    'ruta' => '/equipos',     'icono' => 'laptop',   'roles' => self::INVENTARIO],
+        ['grupo' => 'Inventario', 'texto' => 'Asignaciones', 'ruta' => '/asignaciones', 'icono' => 'user-check', 'roles' => self::INVENTARIO],
+        ['grupo' => 'Inventario', 'texto' => 'Movimientos', 'ruta' => '/movimientos', 'icono' => 'move',    'roles' => self::INVENTARIO],
+        ['grupo' => 'Soporte técnico', 'texto' => 'Mantenimientos', 'ruta' => '/mantenimientos', 'icono' => 'wrench',  'roles' => self::PANEL],
+        ['grupo' => 'Soporte técnico', 'texto' => 'Repuestos',      'ruta' => '/repuestos',      'icono' => 'package', 'roles' => self::PANEL],
         ['grupo' => 'Personas',  'texto' => 'Personas',    'ruta' => '/personas',    'icono' => 'users',    'roles' => self::PANEL],
         ['grupo' => 'Personas',  'texto' => 'Usuarios',    'ruta' => '/usuarios',    'icono' => 'shield',   'roles' => ['administrador']],
+        ['grupo' => 'Personas',  'texto' => 'Auditoría',   'ruta' => '/auditoria',   'icono' => 'history',  'roles' => ['administrador']],
         ['grupo' => 'Mi cuenta', 'texto' => 'Mi perfil',   'ruta' => '/perfil',      'icono' => 'user',     'roles' => self::PANEL],
     ];
 

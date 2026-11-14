@@ -40,6 +40,47 @@ final class Persona extends Catalogo
         return array_column($filas, 'texto', 'id');
     }
 
+    /** Persona con su nombre completo, área y cuenta (mismas columnas que el listado). */
+    public function ficha(int $id): ?array
+    {
+        return $this->fetchOne("SELECT {$this->seleccion()} {$this->desde()} WHERE t.id = :id", [':id' => $id]);
+    }
+
+    /**
+     * Personas activas a quienes se puede entregar un equipo o que autorizan un traslado.
+     * @return array [id => "Apellidos Nombres · cédula"]
+     */
+    public function opcionesActivas(?int $incluirId = null): array
+    {
+        $filas = $this->fetchAll(
+            "SELECT p.id, CONCAT(p.apellidos, ' ', p.nombres, COALESCE(CONCAT(' · ', p.identificacion), '')) AS texto
+               FROM personas p
+              WHERE p.activo = 1 OR p.id <=> :incluir
+              ORDER BY p.apellidos, p.nombres",
+            [':incluir' => $incluirId]
+        );
+        return array_column($filas, 'texto', 'id');
+    }
+
+    /**
+     * Personas activas con una cuenta activa de técnico: quienes pueden atender un mantenimiento.
+     * $incluirId agrega ese técnico aunque ya no cumpla (valor ya guardado).
+     * @return array [id => "Apellidos Nombres"]
+     */
+    public function opcionesTecnicos(?int $incluirId = null): array
+    {
+        $filas = $this->fetchAll(
+            "SELECT p.id, CONCAT(p.apellidos, ' ', p.nombres) AS texto
+               FROM personas p
+              WHERE (p.activo = 1 AND EXISTS (SELECT 1 FROM usuarios u
+                                               WHERE u.persona_id = p.id AND u.rol = 'tecnico' AND u.activo = 1))
+                 OR p.id <=> :incluir
+              ORDER BY p.apellidos, p.nombres",
+            [':incluir' => $incluirId]
+        );
+        return array_column($filas, 'texto', 'id');
+    }
+
     public function dependencias(int $id): array
     {
         $frases = [];

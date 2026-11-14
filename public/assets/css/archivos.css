@@ -1,0 +1,214 @@
+/* ==========================================================================
+   archivos.css — Adjuntos (entregas y traslados), galería de fotos de un
+   reporte y selector de fotos del formulario de falla. Mobile first.
+   Solo usa los tokens de base.css: sirve tanto en el panel como en la
+   página del docente y en la página pública del QR.
+   ========================================================================== */
+
+/* ---------- Campo de archivo nativo ---------- */
+input[type="file"] {
+  width: 100%;
+  min-height: 48px;
+  padding: var(--s-2);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--ground);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9375rem;
+}
+input[type="file"]::file-selector-button {
+  margin-right: var(--s-3);
+  padding: 8px 14px;
+  border: 1px solid var(--blue);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--blue);
+  font: 600 0.9375rem/1.2 var(--sans);
+  cursor: pointer;
+}
+input[type="file"][aria-invalid="true"] { border-color: var(--bad); }
+
+/* ---------- Página de adjuntos ---------- */
+.adjuntos-grid { display: grid; gap: var(--s-4); margin-top: var(--s-5); }
+.adjuntos-seccion { display: grid; gap: var(--s-4); align-content: start; padding: var(--s-5); }
+.adjuntos-seccion > .btn { justify-self: start; }
+
+.adjuntos-vacio {
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+  color: var(--ink-2);
+}
+
+.adjuntos { display: grid; gap: var(--s-3); margin: 0; padding: 0; list-style: none; }
+
+.adjunto {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: var(--s-2) var(--s-3);
+  align-items: start;
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid var(--line-2);
+}
+.adjunto:last-child { border-bottom: 0; padding-bottom: 0; }
+
+.adjunto-vista {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--ground);
+  color: var(--navy-700);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.adjunto-vista img { width: 100%; height: 100%; object-fit: cover; }
+.adjunto-vista .icon { width: 24px; height: 24px; }
+
+.adjunto-info { display: grid; gap: 2px; min-width: 0; }
+.adjunto-nombre { font-weight: 700; overflow-wrap: anywhere; }
+.adjunto-meta { color: var(--ink-2); font-size: 0.875rem; }
+.adjunto-desc { font-size: 0.9375rem; }
+
+.adjunto-acciones {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+  margin-left: -8px;
+}
+.adjunto-acciones form { margin: 0; }
+
+.adjuntos-form {
+  max-width: none;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-2);
+}
+
+@media (min-width: 600px) {
+  .adjunto { grid-template-columns: 64px minmax(0, 1fr) auto; }
+  .adjunto-acciones { grid-column: auto; flex-direction: column; align-items: flex-end; margin-left: 0; }
+}
+
+@media (min-width: 901px) {
+  .adjuntos-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); align-items: start; }
+}
+
+/* ---------- Galería de fotos (reporte de falla) ---------- */
+.fotos-galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fotos-galeria a {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--ground);
+}
+.fotos-galeria img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-media) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) { .fotos-galeria a:hover img { transform: scale(var(--mov-zoom)); } }
+.fotos-galeria--mini { grid-template-columns: repeat(auto-fill, minmax(64px, 88px)); }
+
+.fotos-titulo {
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+  margin: 0;
+  font: 700 0.9375rem/1.3 var(--sans);
+  color: var(--ink);
+}
+.fotos-titulo .icon { width: 18px; height: 18px; color: var(--navy-700); }
+
+/* ---------- Selector de fotos del formulario de falla ---------- */
+.fotos { display: grid; gap: var(--s-2); }
+.fotos-botones { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.fotos-botones[hidden],
+.fotos-boton[hidden],
+.fotos-nativo[hidden] { display: none; }
+
+/* Los <input type="file"> van dentro de la etiqueta: el botón visible es la etiqueta */
+.fotos-boton { position: relative; cursor: pointer; }
+.fotos-boton input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.fotos-boton:focus-within { outline: 3px solid var(--gold); outline-offset: 2px; }
+.fotos-boton[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
+.fotos-boton[aria-disabled="true"] input { cursor: not-allowed; }
+
+.fotos-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fotos-lista:empty { display: none; }
+
+.foto-item {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--ground);
+}
+.foto-item img { width: 100%; height: 100%; object-fit: cover; }
+.foto-item.is-procesando::after {
+  content: "Preparando…";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--ink-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.foto-quitar {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(18, 30, 48, 0.78);
+  color: #fff;
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) { .foto-quitar:hover { background: var(--bad); } }
+.foto-quitar .icon { width: 18px; height: 18px; }
+
+.fotos-conteo { font-size: 0.875rem; color: var(--ink-2); }
+.fotos-reporte { display: grid; gap: var(--s-2); margin-top: var(--s-2); }
+.reportes .fotos-galeria { margin-top: var(--s-2); }

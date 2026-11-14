@@ -48,20 +48,18 @@ final class DocenteController extends Controller
             'etiquetas' => $etiquetas,
             'atencion'  => $atencion,
             'historial' => $historial,
-            'reporte'   => [
-                'ok'      => Session::flash('reporte_ok'),
-                'error'   => Session::flash('reporte_error'),
-                'errores' => Session::flash('reporte_errores') ?? [],
-                'old'     => Session::flash('reporte_old') ?? [],
-            ],
+            'reporte'   => self::datosFormulario(),
             'csrf'      => Session::csrfToken(),
             'nav'       => true,
-            'estilos'   => ['docente.css'],
-            'scripts'   => ['vendor/qrcode.min.js', 'docente.js'],
+            'estilos'   => ['docente.css', 'archivos.css'],
+            'scripts'   => ['vendor/qrcode.min.js', 'vendor/jsQR.min.js', 'docente.js', 'reporte.js', 'lector-qr.js'],
         ]);
     }
 
-    /** POST /docente/reportar — crea la solicitud de diagnóstico y marca el estado del equipo. */
+    /**
+     * POST /docente/reportar — crea la solicitud de diagnóstico, guarda las fotos y marca el estado del equipo.
+     * Llega desde /docente o desde la página del QR (campo oculto qr = token): los errores vuelven a la página de origen.
+     */
     public function reportar(): void
     {
         $this->requireCsrf();
@@ -70,6 +68,9 @@ final class DocenteController extends Controller
         $equipoId  = filter_var($_POST['equipo'] ?? '', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $problema  = trim((string) ($_POST['problema'] ?? ''));
         $uso       = (string) ($_POST['uso'] ?? '');
+        $token     = (string) ($_POST['qr'] ?? '');
+        $desdeQr   = QrController::tokenValido($token);
+        $volver    = $desdeQr ? "/q/$token/reportar" : '/docente#reportar';
         $old       = ['equipo' => $equipoId ?: '', 'problema' => $problema, 'uso' => $uso];
 
         $errores = [];
@@ -89,35 +90,99 @@ final class DocenteController extends Controller
             $errores['uso'] = 'Indica si todavía puedes usar el equipo.';
         }
 
-        if ($errores) {
-            Session::flash('reporte_errores', $errores);
-            Session::flash('reporte_old', $old);
-            $this->redirect('/docente#reportar');
+        // Fotos de la falla: opcionales, hasta archivos.fotos_reporte
+        $fotos  = Subida::lista('fotos');
+        $maximo = self::maxFotos();
+        $listas = [];
+        if (count($fotos) > $maximo) {
+            $errores['fotos'] = 'Puedes adjuntar hasta ' . Formato::plural($maximo, 'foto', 'fotos') . '.';
+        } else {
+            foreach ($fotos as $foto) {
+                $datos = Subida::validar($foto, Subida::FOTOS);
+                if ($datos['error']) {
+                    $errores['fotos'] = $datos['error'];
+                    break;
+                }
+                $listas[] = [$foto, $datos];
+            }
         }
 
+        if ($errores) {
+            // El navegador no conserva los archivos elegidos: hay que volver a adjuntarlos
+            if ($fotos && !isset($errores['fotos'])) {
+                $errores['fotos'] = 'Vuelve a adjuntar las fotos antes de enviar.';
+            }
+            Session::flash('reporte_errores', $errores);
+            Session::flash('reporte_old', $old);
+            $this->redirect($volver);
+        }
+
+        $guardadas = [];
         try {
-            $mant = new Mantenimiento();
-            $mantId = $mant->transaccion(function () use ($mant, $equipo, $problema, $uso, $usuario) {
+            $mant   = new Mantenimiento();
+            $mantId = $mant->transaccion(function () use ($mant, $equipo, $problema, $uso, $usuario, $listas, &$guardadas) {
                 $id = $mant->reportarFalla((int) $equipo['id'], $problema, $usuario['id']);
                 (new Equipo())->marcarFalla((int) $equipo['id'], $uso);
+
+                $archivo = new Archivo();
+                foreach ($listas as [$foto, $datos]) {
+                    $ruta        = Subida::guardar($foto, $datos['ext']);
+                    $guardadas[] = $ruta;
+                    $archivo->crear([
+                        'equipo_id'        => (int) $equipo['id'],
+                        'mantenimiento_id' => $id,
+                        'clase'            => 'fotografia',
+                        'tipo'             => 'falla',
+                        'nombre_original'  => $datos['nombre'],
+                        'ruta_archivo'     => $ruta,
+                        'mime_type'        => $datos['mime'],
+                        'tamano_bytes'     => $datos['tamano'],
+                        'subido_por'       => $usuario['id'],
+                    ]);
+                }
                 return $id;
             });
             (new Auditoria())->registrar($usuario['id'], 'mantenimientos', $mantId, 'crear', [
-                'origen' => 'reporte_docente', 'equipo' => $equipo['codigo'], 'uso' => $uso,
+                'origen' => $desdeQr ? 'reporte_docente_qr' : 'reporte_docente',
+                'equipo' => $equipo['codigo'], 'uso' => $uso, 'fotos' => count($listas),
             ]);
-        } catch (PDOException $e) {
+        } catch (Throwable $e) {
+            // Si algo falló, no deja fotos sueltas en el disco
+            foreach ($guardadas as $ruta) {
+                Subida::borrar($ruta);
+            }
             error_log('[reportar] ' . $e->getMessage());
             Session::flash('reporte_error', 'No pudimos guardar tu reporte. Inténtalo de nuevo en unos minutos.');
             Session::flash('reporte_old', $old);
-            $this->redirect('/docente#reportar');
+            $this->redirect($volver);
         }
 
         $comoQueda = $uso === 'inoperativo' ? 'como equipo inoperativo' : 'como equipo con fallas';
         if ($equipo['estado_operativo'] === 'en_mantenimiento') {
             $comoQueda = 'y la sumamos a su mantenimiento en curso';
         }
-        Session::flash('reporte_ok', "Registramos la falla de {$equipo['codigo']} $comoQueda. "
+        $conFotos = $listas ? ' con ' . Formato::plural(count($listas), 'foto', 'fotos') : '';
+        Session::flash('reporte_ok', "Registramos la falla de {$equipo['codigo']}$conFotos $comoQueda. "
             . 'Soporte TI revisará tu solicitud de diagnóstico.');
-        $this->redirect('/docente#reportar');
+        $this->redirect($desdeQr ? "/q/$token" : '/docente#reportar');
+    }
+
+    /** Cuántas fotos admite un reporte de falla (config archivos.fotos_reporte). */
+    public static function maxFotos(): int
+    {
+        return max(1, (int) App::config('archivos.fotos_reporte', 3));
+    }
+
+    /** Datos que necesita el formulario de reporte (partials/reporte_falla.php). */
+    public static function datosFormulario(): array
+    {
+        return [
+            'ok'       => Session::flash('reporte_ok'),
+            'error'    => Session::flash('reporte_error'),
+            'errores'  => Session::flash('reporte_errores') ?? [],
+            'old'      => Session::flash('reporte_old') ?? [],
+            'maxFotos' => self::maxFotos(),
+            'maxBytes' => (int) App::config('archivos.max_foto'),
+        ];
     }
 }

@@ -1,0 +1,86 @@
+/* =====================================================================
+   auditoria.css — Visor de auditoría y actividad reciente del inicio (mobile first).
+   Usa los tokens de base.css y las piezas de panel.css (chips, sellos, paginación).
+   ===================================================================== */
+
+.eventos-auditoria { display: grid; gap: var(--s-3); }
+.evento-auditoria {
+  display: grid;
+  gap: var(--s-1);
+  min-width: 0;
+  padding: var(--s-3) var(--s-4);
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.evento-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-1) var(--s-3);
+  color: var(--ink-2);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+.evento-titulo { color: var(--ink); font-weight: 600; overflow-wrap: anywhere; }
+.evento-titulo a,
+.evento-titulo strong { font-weight: 700; }
+.evento-autor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+.evento-autor .icon { width: 16px; height: 16px; flex: none; }
+.evento-autor a { color: inherit; }
+@media (hover: hover) and (pointer: fine) { .evento-autor a:hover { color: var(--blue); } }
+
+.evento-detalle { margin-top: var(--s-1); }
+.evento-detalle summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  color: var(--blue);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) { .evento-detalle summary:hover { color: var(--blue-700); text-decoration: underline; } }
+.evento-lineas {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border-radius: var(--radius-sm);
+  background: var(--ground);
+  font-size: 0.9375rem;
+}
+.evento-lineas + .evento-lineas { margin-top: var(--s-2); }
+.evento-lineas > div { display: grid; gap: 2px; min-width: 0; }
+.evento-lineas dt { color: var(--ink-2); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.04em; }
+.evento-lineas dd { margin: 0; overflow-wrap: anywhere; }
+.evento-lineas--tecnicas { background: transparent; border: 1px dashed var(--line); color: var(--ink-2); font-size: 0.875rem; }
+
+@container page (min-width: 600px) {
+  .evento-lineas > div { grid-template-columns: 11rem minmax(0, 1fr); gap: var(--s-3); align-items: baseline; }
+}
+
+@container page (min-width: 880px) {
+  .mas-filtros-campos--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .mas-filtros-campos--4 .mas-filtros-acciones { grid-column: 1 / -1; display: flex; gap: var(--s-2); }
+  .evento-auditoria {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--s-5);
+    align-items: center;
+  }
+  .evento-cabecera { grid-column: 2; grid-row: 1 / span 2; flex-direction: column; align-items: flex-end; }
+  .evento-titulo { grid-column: 1; grid-row: 1; }
+  .evento-autor { grid-column: 1; grid-row: 2; }
+  .evento-detalle { grid-column: 1 / -1; }
+}
+
+@media print {
+  .chips, .mas-filtros, .paginacion { display: none !important; }
+  .evento-auditoria { box-shadow: none; border: 1px solid var(--line); break-inside: avoid; }
+}
