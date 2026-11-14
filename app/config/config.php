@@ -7,7 +7,7 @@ return [
     'app' => [
         'name'     => 'Inventario Tecnológico · ISTSGA',
         'timezone' => 'America/Guayaquil',
-        'debug'    => true, // true solo para desarrollar en local: muestra el detalle de los errores
+        'debug'    => false, // true solo para desarrollar en local: muestra el detalle de los errores
         'escudo'   => 'https://academico.sangabrielriobamba.edu.ec/assets/brand/SGlogo.svg',
         // Encabezado de las actas de entrega
         'institucion' => 'Instituto Superior Tecnológico San Gabriel',

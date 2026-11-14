@@ -35,7 +35,7 @@
 }
 .evento-autor .icon { width: 16px; height: 16px; flex: none; }
 .evento-autor a { color: inherit; }
-.evento-autor a:hover { color: var(--blue); }
+@media (hover: hover) and (pointer: fine) { .evento-autor a:hover { color: var(--blue); } }
 
 .evento-detalle { margin-top: var(--s-1); }
 .evento-detalle summary {
@@ -47,7 +47,7 @@
   font-size: 0.9375rem;
   cursor: pointer;
 }
-.evento-detalle summary:hover { color: var(--blue-700); text-decoration: underline; }
+@media (hover: hover) and (pointer: fine) { .evento-detalle summary:hover { color: var(--blue-700); text-decoration: underline; } }
 .evento-lineas {
   display: grid;
   gap: var(--s-2);

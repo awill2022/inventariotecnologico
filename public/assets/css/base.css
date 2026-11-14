@@ -50,8 +50,21 @@
   --radius-sm: 4px;
   --shadow: 0 1px 2px rgba(18, 30, 48, 0.06), 0 6px 18px -8px rgba(18, 30, 48, 0.18);
   --shadow-lift: 0 2px 4px rgba(18, 30, 48, 0.08), 0 16px 32px -12px rgba(18, 30, 48, 0.32);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --wrap: 1200px;
+
+  /* Movimiento: curvas propias, duraciones cortas y solo transform/opacity.
+     Las salidas van más rápido que las entradas. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);      /* entrar, salir y responder al usuario */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1); /* lo que se mueve o gira dentro de la pantalla */
+  --dur-rapida: 160ms; /* color, borde, presión de botón */
+  --dur-media: 220ms;  /* menús, ventanas, desplazamientos */
+  --dur-salida: 160ms; /* cierre de menús y ventanas */
+  --mov-presion: 0.97;           /* escala del botón al presionarlo */
+  --mov-elevar: -4px;            /* etiqueta señalada desde un chip */
+  --mov-zoom: 1.04;              /* foto bajo el puntero */
+  --mov-entrada-y: 8px;          /* ventanas: suben un poco al abrir */
+  --mov-entrada-escala: 0.97;    /* ventanas: nunca desde 0 */
+  --mov-menu-y: -6px;            /* menú del encabezado: baja al abrir */
 }
 
 /* ---------- Base ---------- */
@@ -77,7 +90,7 @@ p { margin: 0; }
 ul, ol { margin: 0; padding: 0; list-style: none; }
 img { display: block; max-width: 100%; }
 a { color: var(--blue); text-underline-offset: 3px; text-decoration-thickness: 1px; }
-a:hover { color: var(--blue-700); }
+@media (hover: hover) and (pointer: fine) { a:hover { color: var(--blue-700); } }
 strong { font-weight: 700; }
 [hidden] { display: none !important; }
 
@@ -140,26 +153,26 @@ strong { font-weight: 700; }
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+  transition: background-color var(--dur-rapida) var(--ease-out), border-color var(--dur-rapida) var(--ease-out), color var(--dur-rapida) var(--ease-out), transform var(--dur-rapida) var(--ease-out);
 }
-.btn:active { transform: translateY(1px); }
+.btn:active:not(:disabled) { transform: scale(var(--mov-presion)); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .btn-block { width: 100%; }
 
 .btn-primary { background: var(--blue); color: #fff; }
-.btn-primary:hover:not(:disabled) { background: var(--blue-700); color: #fff; }
+@media (hover: hover) and (pointer: fine) { .btn-primary:hover:not(:disabled) { background: var(--blue-700); color: #fff; } }
 
 .btn-gold { background: var(--gold); color: var(--navy-900); }
-.btn-gold:hover { background: #dcb35a; }
+@media (hover: hover) and (pointer: fine) { .btn-gold:hover { background: #dcb35a; } }
 
 .btn-ghost-light { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.45); }
-.btn-ghost-light:hover { background: rgba(255, 255, 255, 0.1); border-color: #fff; }
+@media (hover: hover) and (pointer: fine) { .btn-ghost-light:hover { background: rgba(255, 255, 255, 0.1); border-color: #fff; } }
 
 .btn-outline { background: var(--panel); color: var(--blue); border-color: var(--blue); }
-.btn-outline:hover { background: var(--maint-50); }
+@media (hover: hover) and (pointer: fine) { .btn-outline:hover { background: var(--maint-50); } }
 
 .btn-text { background: transparent; color: var(--ink-2); padding-inline: var(--s-3); }
-.btn-text:hover { color: var(--ink); text-decoration: underline; }
+@media (hover: hover) and (pointer: fine) { .btn-text:hover { color: var(--ink); text-decoration: underline; } }
 
 /* ---------- Títulos de sección (barra oro 56 × 3px) ---------- */
 .section-title {
@@ -216,7 +229,7 @@ textarea {
   color: var(--ink);
   font: 400 1rem/1.45 var(--sans);
   caret-color: var(--blue);
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  transition: border-color var(--dur-rapida) var(--ease-out), box-shadow var(--dur-rapida) var(--ease-out);
 }
 input[type="text"],
 input[type="password"],
@@ -302,9 +315,9 @@ input:disabled { background: #f1f3f5; cursor: not-allowed; }
   letter-spacing: 0.03em;
   font-variant-numeric: tabular-nums;
   text-decoration: none;
-  transition: border-color 160ms ease, background-color 160ms ease;
+  transition: border-color var(--dur-rapida) var(--ease-out), background-color var(--dur-rapida) var(--ease-out);
 }
-.tag-ref:hover { border-color: var(--gold); background: var(--gold-50); color: var(--navy); }
+@media (hover: hover) and (pointer: fine) { .tag-ref:hover { border-color: var(--gold); background: var(--gold-50); color: var(--navy); } }
 
 @media (max-width: 560px) {
   .wrap { padding-inline: var(--s-4); }
@@ -315,9 +328,40 @@ input:disabled { background: #f1f3f5; cursor: not-allowed; }
   .empty .btn { width: 100%; white-space: normal; line-height: 1.2; padding-block: var(--s-2); }
 }
 
+/* ---------- Ventanas (dialog): entran y salen con transición interrumpible ----------
+   Sin soporte de @starting-style simplemente aparecen, como antes. */
+dialog {
+  opacity: 0;
+  transform: translateY(var(--mov-entrada-y)) scale(var(--mov-entrada-escala));
+  transition-property: opacity, transform, overlay, display;
+  transition-duration: var(--dur-salida);
+  transition-timing-function: var(--ease-out);
+  transition-behavior: allow-discrete;
+}
+dialog[open] { opacity: 1; transform: none; transition-duration: var(--dur-media); }
+dialog::backdrop {
+  opacity: 0;
+  transition-property: opacity, overlay, display;
+  transition-duration: var(--dur-salida);
+  transition-timing-function: var(--ease-out);
+  transition-behavior: allow-discrete;
+}
+dialog[open]::backdrop { opacity: 1; transition-duration: var(--dur-media); }
+@starting-style {
+  dialog[open] { opacity: 0; transform: translateY(var(--mov-entrada-y)) scale(var(--mov-entrada-escala)); }
+  dialog[open]::backdrop { opacity: 0; }
+}
+
+/* Movimiento reducido no es "sin movimiento": se quitan desplazamientos, escalas
+   y zoom, pero se conservan los fundidos y cambios de color que explican qué cambió. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *,
-  *::before,
-  *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  :root {
+    --mov-presion: 1;
+    --mov-elevar: 0px;
+    --mov-zoom: 1;
+    --mov-entrada-y: 0px;
+    --mov-entrada-escala: 1;
+    --mov-menu-y: 0px;
+  }
 }

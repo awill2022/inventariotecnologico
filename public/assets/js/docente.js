@@ -167,8 +167,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var reducido = prefiereMenosMovimiento();
       tag.scrollIntoView({ behavior: reducido ? 'auto' : 'smooth', block: 'center' });
       tag.focus({ preventScroll: true });
-      if (reducido) return;
 
+      // Con movimiento reducido el CSS anula la elevación; el resaltado dorado se mantiene
       tag.classList.add('is-linked');
       void tag.offsetWidth; // reinicia la animación
       tag.classList.add('is-flash');

@@ -141,7 +141,7 @@
   font-weight: 600;
   text-decoration: none;
 }
-.qr-volver:hover { text-decoration: underline; }
+@media (hover: hover) and (pointer: fine) { .qr-volver:hover { text-decoration: underline; } }
 .qr-volver .icon { width: 18px; height: 18px; }
 
 .qr-reporte { padding: var(--s-5); }

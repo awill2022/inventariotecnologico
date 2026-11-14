@@ -33,7 +33,7 @@
   border-bottom: 2px solid currentColor;
   rotate: 45deg;
   translate: 0 -2px;
-  transition: rotate 160ms ease;
+  transition: rotate var(--dur-rapida) var(--ease-in-out);
 }
 .mas-filtros[open] summary::after { rotate: 225deg; translate: 0 2px; }
 .mas-filtros summary .icon { width: 18px; height: 18px; }
@@ -71,7 +71,7 @@
 .tabla-equipos .col-check .check { padding: var(--s-2); margin: calc(var(--s-2) * -1); }
 .tabla-equipos .principal { padding-right: 48px; }
 .tabla-equipos .principal a { color: inherit; text-decoration: none; }
-.tabla-equipos .principal a:hover { text-decoration: underline; }
+@media (hover: hover) and (pointer: fine) { .tabla-equipos .principal a:hover { text-decoration: underline; } }
 .tabla-equipos .principal a::after { content: ""; position: absolute; inset: 0; } /* toda la tarjeta abre la ficha */
 .tabla-equipos .col-check { z-index: 1; }
 .tabla .sub { display: block; color: var(--ink-2); font-size: 0.875rem; font-weight: 400; }
@@ -105,7 +105,7 @@
 .ficha-acciones form { margin: 0; }
 .ficha-acciones .btn { width: 100%; }
 .btn-text--danger { color: var(--bad); }
-.btn-text--danger:hover { color: #8f1e18; }
+@media (hover: hover) and (pointer: fine) { .btn-text--danger:hover { color: #8f1e18; } }
 
 .ficha { display: grid; gap: var(--s-4); }
 .ficha-seccion { display: grid; gap: var(--s-4); align-content: start; padding: var(--s-5); }

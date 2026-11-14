@@ -137,6 +137,8 @@ Toda petición entra por `public/index.php`. Las rutas admiten parámetros (`/eq
 
 ## Instalación
 
+> Estos pasos son para instalar en local con XAMPP. Para publicarlo en un servidor con **Ubuntu Server** (Apache, PHP, MariaDB, HTTPS y respaldos), sigue el [manual de despliegue](docs/DESPLIEGUE_UBUNTU.md).
+
 ### Requisitos
 
 - [XAMPP](https://www.apachefriends.org/) con PHP 8.1 o superior y MySQL/MariaDB.

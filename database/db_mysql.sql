@@ -184,9 +184,9 @@ CREATE TABLE auditoria (
  CONSTRAINT fk_aud_usuario FOREIGN KEY(usuario_id) REFERENCES usuarios(id),
  INDEX idx_aud_entidad(entidad,entidad_id,fecha)
 ) ENGINE=InnoDB;
--- Ingreso de persona --
+-- Ingreso de persona (cuenta de prueba 'daniel' que usan los datos de demostración; datos ficticios) --
 insert into personas (identificacion, nombres, apellidos, cargo, area_id, correo, telefono, activo	)
-VALUES ('000002', 'Daniel', 'Caiza', 'docente', NULL, 'morocho.24caiza@gmail.com', '0999428684', TRUE);
+VALUES ('000002', 'Docente', 'De Prueba', 'docente', NULL, NULL, NULL, TRUE);
 -- Ingreso de usuario (la clave en texto plano se convierte en hash en el primer inicio de sesión) --
 insert into usuarios (persona_id, usuario, clave_hash, rol, activo)
 VALUES (LAST_INSERT_ID(), 'daniel', '1234', 'consulta', TRUE);

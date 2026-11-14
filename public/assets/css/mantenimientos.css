@@ -59,9 +59,9 @@
   box-shadow: var(--shadow);
   color: var(--ink);
   text-decoration: none;
-  transition: border-color 160ms ease;
+  transition: border-color var(--dur-rapida) var(--ease-out);
 }
-.trabajo:hover { border-color: var(--blue); color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { .trabajo:hover { border-color: var(--blue); color: var(--ink); } }
 .trabajo-texto { display: grid; min-width: 0; }
 .trabajo-titulo { font-weight: 700; color: var(--navy); font-variant-numeric: tabular-nums; }
 .trabajo-tipo { font-weight: 400; color: var(--ink-2); }

@@ -44,9 +44,9 @@
   color: var(--ink);
   text-decoration: none;
 }
-a.barra { transition: background-color 160ms ease; }
-a.barra:hover { background: #f3f5f7; color: var(--ink); }
-a.barra:hover .barra-nombre { color: var(--blue); text-decoration: underline; }
+a.barra { transition: background-color var(--dur-rapida) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { a.barra:hover { background: #f3f5f7; color: var(--ink); } }
+@media (hover: hover) and (pointer: fine) { a.barra:hover .barra-nombre { color: var(--blue); text-decoration: underline; } }
 .barra-nombre { min-width: 0; overflow-wrap: anywhere; font-weight: 600; }
 .barra-valor { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink-2); font-size: 0.875rem; }
 .barra-valor strong { color: var(--ink); font-size: 1rem; margin-right: 6px; }
