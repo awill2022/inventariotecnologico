@@ -1,10 +1,12 @@
 <?php
 /**
- * Layout para páginas sin sesión: login y errores.
+ * Layout para páginas sin sesión: login, verificación QR y errores.
  * @var string $contenido  HTML de la vista
  * @var string $titulo
+ * @var array  $estilos    CSS propios de la página (en public/assets/css)
  * @var array  $scripts    JS propios de la página (en public/assets/js)
  */
+$estilos ??= [];
 $scripts ??= [];
 ?>
 <!DOCTYPE html>
@@ -15,6 +17,9 @@ $scripts ??= [];
     <title><?= View::e($titulo ?? '') ?> | <?= View::e(App::config('app.name')) ?></title>
     <?php require APP_PATH . '/views/partials/head.php'; ?>
     <link rel="stylesheet" href="<?= View::asset('css/auth.css') ?>">
+    <?php foreach ($estilos as $css): ?>
+        <link rel="stylesheet" href="<?= View::asset('css/' . $css) ?>">
+    <?php endforeach; ?>
 </head>
 <body class="page-auth">
     <?php require APP_PATH . '/views/partials/iconos.php'; ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Mi perfil: datos de la cuenta y cambio de la clave propia. Lo usan todos los roles.
+ * Mi perfil: datos de la cuenta, PIN rápido para QR y cambio de la clave propia.
  * Si la clave es temporal (cuenta nueva o restablecida), es la única página
  * disponible hasta cambiarla (ver Auth::requireRole).
  */
@@ -11,7 +11,6 @@ final class PerfilController extends Controller
     {
         $perfil = (new Usuario())->perfil(Auth::user()['id']);
         if ($perfil === null) {
-            // La cuenta ya no existe: se cierra la sesión
             Auth::logout();
             $this->redirect('/login');
         }
@@ -24,7 +23,7 @@ final class PerfilController extends Controller
             'perfil'  => $perfil,
             'rol'     => Usuario::ROLES[$perfil['rol']] ?? $perfil['rol'],
             'forzado' => $forzado,
-            'suelto'  => $docente, // layout main: la página pone su propio contenedor
+            'suelto'  => $docente,
             'volver'  => $docente && !$forzado ? Auth::home() : null,
             'campos'  => self::campos($forzado),
             'errores' => Session::flash('form_errores') ?? [],
@@ -42,7 +41,6 @@ final class PerfilController extends Controller
         $id     = Auth::user()['id'];
         $perfil = $modelo->perfil($id) ?? $this->redirect('/login');
 
-        // El usuario se agrega para que la política impida usarlo como clave
         [$datos, $errores] = Validador::validar(self::campos(Auth::debeCambiarClave()), ['usuario' => $perfil['usuario']] + $_POST);
 
         if (!isset($errores['clave_actual']) && !$modelo->verificarClave($perfil, $datos['clave_actual'])) {
@@ -83,7 +81,35 @@ final class PerfilController extends Controller
         $this->redirect('/perfil');
     }
 
-    /** Campos del cambio de clave. Con clave temporal, la "actual" es la que entregó el administrador. */
+    /** POST /perfil/pin — Cambia el PIN rápido de 4 dígitos para reportes por QR. */
+    public function cambiarPin(): void
+    {
+        $this->requireCsrf();
+        $modelo = new Usuario();
+        $perfil = $modelo->perfil(Auth::user()['id']) ?? $this->redirect('/login');
+
+        if (empty($perfil['persona_id'])) {
+            Session::flash('error', 'Tu cuenta no tiene una ficha de persona vinculada.');
+            $this->redirect('/perfil');
+        }
+
+        $pin = trim((string) ($_POST['pin_reporte'] ?? ''));
+        if ($pin !== '' && !preg_match('/^\d{4}$/', $pin)) {
+            Session::flash('error', 'El PIN rápido para reportes QR debe tener exactamente 4 números.');
+            $this->redirect('/perfil');
+        }
+
+        $modelo->cambiarPin((int) $perfil['persona_id'], $pin !== '' ? $pin : null);
+        (new Auditoria())->registrar((int) $perfil['id'], 'personas', (int) $perfil['persona_id'], 'editar', [
+            'nota' => 'Actualización de PIN rápido para reportes QR',
+        ]);
+
+        Session::flash('ok', $pin !== ''
+            ? 'Tu nuevo PIN de 4 dígitos para reportes QR quedó guardado.'
+            : 'Se restableció tu PIN QR a los últimos 4 dígitos de tu cédula.');
+        $this->redirect('/perfil');
+    }
+
     private static function campos(bool $temporal): array
     {
         return [

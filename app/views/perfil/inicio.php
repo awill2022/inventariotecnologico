@@ -1,6 +1,6 @@
 <?php
 /**
- * Mi perfil: datos de la cuenta y cambio de clave. Se ve en el panel y en la página del docente.
+ * Mi perfil: datos de la cuenta  PIN QR y cambio de clave. Se ve en el panel y en la página del docente.
  * @var array   $perfil   cuenta + persona + área (Usuario::perfil)
  * @var string  $rol      nombre visible del rol
  * @var bool    $forzado  true si la clave es temporal y debe cambiarse ya
@@ -38,7 +38,7 @@ $datos   = [
             <p class="section-note">
                 <?= $forzado
                     ? 'Entraste con una clave temporal. Por seguridad, cámbiala por una que solo tú conozcas antes de continuar.'
-                    : 'Tus datos en el sistema y el cambio de tu clave.' ?>
+                    : 'Tus datos en el sistema, tu PIN para reportes QR y el cambio de tu clave.' ?>
             </p>
         </div>
     </div>
@@ -78,6 +78,23 @@ $datos   = [
                     <?php endforeach; ?>
                 </dl>
                 <p class="field-help">Si algún dato está mal, pide a la Unidad de Inventario que corrija tu ficha.</p>
+
+                <?php if (!empty($perfil['persona_id'])): ?>
+                    <?php $pinActual = $perfil['pin_reporte'] ?: substr((string) $perfil['identificacion'], -4); ?>
+                    <form method="POST" action="<?= View::url('/perfil/pin') ?>" style="margin-top: var(--s-4); padding-top: var(--s-4); border-top: 1px dashed var(--line);">
+                        <input type="hidden" name="_csrf" value="<?= View::e($csrf) ?>">
+                        <div class="field">
+                            <label for="pin_reporte">PIN rápido para reportes QR (4 dígitos)</label>
+                            <div style="display: flex; gap: var(--s-2);">
+                                <input type="text" id="pin_reporte" name="pin_reporte" maxlength="4"
+                                       inputmode="numeric" pattern="\d{4}" value="<?= View::e($pinActual) ?>"
+                                       style="max-width: 140px; font-variant-numeric: tabular-nums; font-weight: 700;">
+                                <button class="btn btn-outline" type="submit">Guardar PIN</button>
+                            </div>
+                            <p class="field-help">Lo usas al escanear el QR de un equipo para reportar una falla sin iniciar sesión.</p>
+                        </div>
+                    </form>
+                <?php endif; ?>
             </section>
         <?php endif; ?>
 
@@ -88,7 +105,6 @@ $datos   = [
             </h2>
             <form class="form perfil-form" method="POST" action="<?= View::url('/perfil/clave') ?>" novalidate data-form-validar>
                 <input type="hidden" name="_csrf" value="<?= View::e($csrf) ?>">
-                <?php // Para los gestores de contraseñas: a qué cuenta pertenece la clave ?>
                 <input type="text" name="usuario" value="<?= View::e($perfil['usuario']) ?>" autocomplete="username" hidden>
 
                 <?php require APP_PATH . '/views/partials/campos.php'; ?>

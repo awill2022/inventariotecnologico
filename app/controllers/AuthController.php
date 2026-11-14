@@ -82,8 +82,16 @@ final class AuthController extends Controller
             Session::start(App::config('session', []));
             $this->volverAlLogin('Tu rol aún no tiene una página asignada en el sistema.');
         }
-        // Con clave temporal, primero tiene que cambiarla
-        $this->redirect(Auth::debeCambiarClave() ? '/perfil' : $destino);
+        $urlPostLogin = Session::get('url_post_login');
+        Session::set('url_post_login', null);
+
+        if (Auth::debeCambiarClave()) {
+            $this->redirect('/perfil');
+        }
+        if ($urlPostLogin && in_array(Auth::rol(), ['tecnico', 'administrador', 'inventario'], true)) {
+            $this->redirect($urlPostLogin);
+        }
+        $this->redirect($destino);
     }
 
     /** POST /logout */

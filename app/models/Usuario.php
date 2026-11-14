@@ -1,9 +1,10 @@
 <?php
 /**
- * Tabla `usuarios` (+ `personas` para el nombre visible).
- * Cada cuenta pertenece a una persona; una persona tiene como máximo una cuenta.
- * No se borran: se desactivan con activo = 0.
- */
+     * Tabla `usuarios` (+ `personas` para el nombre visible).
+     * Cada cuenta pertenece a una persona; una persona tiene como máximo una cuenta.
+     * No se borran: se desactivan con activo = 0.
+     */
+    
 final class Usuario extends Catalogo
 {
     public const ROLES = [
@@ -21,7 +22,6 @@ final class Usuario extends Catalogo
 
     protected function seleccion(): string
     {
-        // Sin clave_hash: el listado no la necesita
         return "t.id, t.usuario, t.usuario AS nombre, t.rol, t.activo, t.ultimo_acceso, t.debe_cambiar_clave,
                 CONCAT(p.nombres, ' ', p.apellidos) AS persona";
     }
@@ -31,7 +31,6 @@ final class Usuario extends Catalogo
         return 'FROM usuarios t LEFT JOIN personas p ON p.id = t.persona_id';
     }
 
-    /** Alta de una cuenta: guarda el hash de la clave temporal y obliga a cambiarla al entrar. */
     public function crear(array $datos): int
     {
         $datos['clave_hash']         = Clave::hash($datos['clave']);
@@ -39,10 +38,6 @@ final class Usuario extends Catalogo
         return parent::crear($datos);
     }
 
-    /**
-     * Usuario activo con persona activa (o sin persona vinculada).
-     * Devuelve null si no existe o está desactivado.
-     */
     public function buscarActivo(string $usuario): ?array
     {
         return $this->fetchOne(
@@ -58,12 +53,12 @@ final class Usuario extends Catalogo
         );
     }
 
-    /** Datos de la cuenta y de su persona para "Mi perfil". */
     public function perfil(int $id): ?array
     {
         return $this->fetchOne(
             'SELECT u.id, u.usuario, u.clave_hash, u.rol, u.ultimo_acceso, u.debe_cambiar_clave,
-                    p.identificacion, p.nombres, p.apellidos, p.cargo, p.correo, p.telefono,
+                    p.id AS persona_id, p.identificacion, p.nombres, p.apellidos,
+                    p.cargo, p.correo, p.telefono, p.pin_reporte,
                     a.nombre AS area
                FROM usuarios u
           LEFT JOIN personas p ON p.id = u.persona_id
@@ -73,10 +68,14 @@ final class Usuario extends Catalogo
         );
     }
 
-    /**
-     * Verifica la clave. Acepta hashes de password_hash() y, por compatibilidad,
-     * claves antiguas guardadas en texto plano: si coinciden, las cifra en ese momento.
-     */
+    public function cambiarPin(int $personaId, ?string $pin): void
+    {
+        $this->execute(
+            'UPDATE personas SET pin_reporte = :pin WHERE id = :id',
+            [':pin' => $pin, ':id' => $personaId]
+        );
+    }
+
     public function verificarClave(array $usuario, string $clave): bool
     {
         $guardada = $usuario['clave_hash'];
@@ -92,7 +91,6 @@ final class Usuario extends Catalogo
             return true;
         }
 
-        // Clave heredada en texto plano: comparar en tiempo constante y migrar.
         if (!hash_equals($guardada, $clave)) {
             return false;
         }
@@ -100,10 +98,6 @@ final class Usuario extends Catalogo
         return true;
     }
 
-    /**
-     * Cambia la clave. Con $temporal = true (restablecida por el administrador)
-     * el usuario deberá cambiarla en su próximo inicio de sesión.
-     */
     public function cambiarClave(int $id, string $clave, bool $temporal): void
     {
         $this->execute(
@@ -117,10 +111,6 @@ final class Usuario extends Catalogo
         $this->execute('UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = :id', [':id' => $id]);
     }
 
-    /**
-     * Administradores que hoy pueden iniciar sesión (cuenta activa y persona activa),
-     * sin contar la cuenta $exceptoId. Si da 0, esa cuenta es el último administrador.
-     */
     public function administradoresActivos(?int $exceptoId = null): int
     {
         return (int) $this->fetchOne(
@@ -134,7 +124,6 @@ final class Usuario extends Catalogo
         )['n'];
     }
 
-    /** Nombre de la persona dueña de la cuenta y si está activa. */
     public function persona(int $id): ?array
     {
         return $this->fetchOne(

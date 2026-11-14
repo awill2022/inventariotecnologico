@@ -13,7 +13,7 @@ return [
 
     'db' => [
         'host'    => '127.0.0.1',
-        'port'    => 3307,
+        'port'    => 3306,
         'name'    => 'inventario_tecnologico',
         'user'    => 'root',
         'pass'    => '',
@@ -31,6 +31,6 @@ return [
         // Sus módulos llegan en otros sprints: por ahora ven una página "en construcción".
         'administrador' => '/panel',
         'inventario'    => '/panel',
-        'tecnico'       => '/panel',
+        'tecnico'       => '/tecnico',
     ],
 ];

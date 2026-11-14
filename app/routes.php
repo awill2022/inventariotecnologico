@@ -39,9 +39,10 @@ foreach ($catalogos as $ruta => $controlador) {
     $router->post("$ruta/{id}/estado",   [$controlador, 'estado'],     $admin);
 }
 
-// Mi perfil: todos los roles (con clave temporal, es lo único disponible)
-$router->get('/perfil',        [PerfilController::class, 'inicio'],      ['*']);
+// Mi perfil: todos los roles
+$router->get('/perfil',        [PerfilController::class, 'inicio'],       ['*']);
 $router->post('/perfil/clave', [PerfilController::class, 'cambiarClave'], ['*']);
+$router->post('/perfil/pin',   [PerfilController::class, 'cambiarPin'],   ['*']);
 
 // Personas: el panel las consulta; administrador e inventario las gestionan
 $gestionPersonas = ['administrador', 'inventario'];
@@ -61,3 +62,28 @@ $router->post('/usuarios/{id}',          [UsuarioController::class, 'actualizar'
 $router->post('/usuarios/{id}/estado',   [UsuarioController::class, 'estado'],      $admin);
 $router->get('/usuarios/{id}/clave',     [UsuarioController::class, 'clave'],       $admin);
 $router->post('/usuarios/{id}/clave',    [UsuarioController::class, 'restablecer'], $admin);
+
+// Escaneo QR público: muestra custodio y da las 2 opciones (Reportar con PIN o Mantenimiento Técnico)
+$router->get('/q/{token}',               [TecnicoController::class, 'qr']);
+$router->post('/q/{token}/reportar',     [TecnicoController::class, 'reportarQr']);
+$router->get('/q/{token}/mantenimiento', [TecnicoController::class, 'irAMantenimientoQr']);
+
+// Módulo Técnico, fichas de mantenimiento, preventivos, etiqueta y descarga de fotos
+$rolesTecnico = ['administrador', 'tecnico'];
+$router->get('/tecnico',                          [TecnicoController::class, 'index'],          $panel);
+$router->get('/tecnico/equipos/{id}',             [TecnicoController::class, 'equipo'],         $panel);
+$router->post('/tecnico/equipos/{id}/iniciar',    [TecnicoController::class, 'iniciar'],        $rolesTecnico);
+$router->post('/tecnico/equipos/{id}/reporte',    [TecnicoController::class, 'guardarReporte'], $rolesTecnico);
+$router->post('/tecnico/equipos/{id}/programar',  [TecnicoController::class, 'programar'],      $rolesTecnico);
+$router->post('/tecnico/equipos/{id}/cancelar',   [TecnicoController::class, 'cancelar'],       $rolesTecnico);
+$router->get('/tecnico/equipos/{id}/etiqueta',    [TecnicoController::class, 'etiqueta'],       $panel);
+$router->get('/archivos/{id}',                    [TecnicoController::class, 'archivo'],        ['*']);
+
+// Catálogo de Repuestos e insumos con stock
+$gestionRepuestos = ['administrador', 'tecnico', 'inventario'];
+$router->get('/repuestos',              [RepuestoController::class, 'index'],      $panel);
+$router->get('/repuestos/nueva',        [RepuestoController::class, 'nueva'],      $gestionRepuestos);
+$router->post('/repuestos',             [RepuestoController::class, 'guardar'],    $gestionRepuestos);
+$router->get('/repuestos/{id}/editar',  [RepuestoController::class, 'editar'],     $gestionRepuestos);
+$router->post('/repuestos/{id}',        [RepuestoController::class, 'actualizar'], $gestionRepuestos);
+$router->post('/repuestos/{id}/estado', [RepuestoController::class, 'estado'],     $gestionRepuestos);

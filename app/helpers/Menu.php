@@ -9,14 +9,15 @@ final class Menu
 
     /** grupo (null = sin título), texto, ruta, icono (id del sprite sin "i-"), roles. */
     private const ITEMS = [
-        ['grupo' => null,        'texto' => 'Inicio',      'ruta' => '/panel',       'icono' => 'home',     'roles' => self::PANEL],
-        ['grupo' => 'Catálogos', 'texto' => 'Categorías',  'ruta' => '/categorias',  'icono' => 'tag',      'roles' => self::PANEL],
-        ['grupo' => 'Catálogos', 'texto' => 'Sedes',       'ruta' => '/sedes',       'icono' => 'building', 'roles' => self::PANEL],
-        ['grupo' => 'Catálogos', 'texto' => 'Áreas',       'ruta' => '/areas',       'icono' => 'network',  'roles' => self::PANEL],
-        ['grupo' => 'Catálogos', 'texto' => 'Ubicaciones', 'ruta' => '/ubicaciones', 'icono' => 'pin',      'roles' => self::PANEL],
-        ['grupo' => 'Personas',  'texto' => 'Personas',    'ruta' => '/personas',    'icono' => 'users',    'roles' => self::PANEL],
-        ['grupo' => 'Personas',  'texto' => 'Usuarios',    'ruta' => '/usuarios',    'icono' => 'shield',   'roles' => ['administrador']],
-        ['grupo' => 'Mi cuenta', 'texto' => 'Mi perfil',   'ruta' => '/perfil',      'icono' => 'user',     'roles' => self::PANEL],
+        ['grupo' => null,        'texto' => 'Inicio',        'ruta' => '/panel',       'icono' => 'home',     'roles' => self::PANEL],
+        ['grupo' => 'Operación', 'texto' => 'Soporte y QR',  'ruta' => '/tecnico',     'icono' => 'wrench',   'roles' => self::PANEL],
+        ['grupo' => 'Catálogos', 'texto' => 'Categorías',    'ruta' => '/categorias',  'icono' => 'tag',      'roles' => self::PANEL],
+        ['grupo' => 'Catálogos', 'texto' => 'Sedes',         'ruta' => '/sedes',       'icono' => 'building', 'roles' => self::PANEL],
+        ['grupo' => 'Catálogos', 'texto' => 'Áreas',         'ruta' => '/areas',       'icono' => 'network',  'roles' => self::PANEL],
+        ['grupo' => 'Catálogos', 'texto' => 'Ubicaciones',   'ruta' => '/ubicaciones', 'icono' => 'pin',      'roles' => self::PANEL],
+        ['grupo' => 'Personas',  'texto' => 'Personas',      'ruta' => '/personas',    'icono' => 'users',    'roles' => self::PANEL],
+        ['grupo' => 'Personas',  'texto' => 'Usuarios',      'ruta' => '/usuarios',    'icono' => 'shield',   'roles' => ['administrador']],
+        ['grupo' => 'Mi cuenta', 'texto' => 'Mi perfil',     'ruta' => '/perfil',      'icono' => 'user',     'roles' => self::PANEL],
     ];
 
     /**

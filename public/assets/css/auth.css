@@ -130,3 +130,159 @@
   justify-items: start;
 }
 .status-card p { color: var(--ink-2); }
+
+/* ---------- Animación 404 con Robot ISTSGA ---------- */
+.status-card--404 {
+  max-width: 520px;
+  justify-items: center;
+  text-align: center;
+  padding: var(--s-6);
+}
+.status-card--404 .section-title::after {
+  margin-inline: auto;
+}
+
+.kicker-404 {
+  color: var(--gold-700);
+  background: var(--gold-50);
+  border: 1px solid var(--gold);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.acciones-404 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  justify-content: center;
+  margin-top: var(--s-2);
+}
+
+.escena-404 {
+  position: relative;
+  width: 280px;
+  height: 290px;
+  display: grid;
+  place-items: center;
+}
+
+/* Levitación del robot */
+.robot-contenedor {
+  position: relative;
+  z-index: 2;
+  animation: robot-flotar 3.4s ease-in-out infinite;
+}
+
+.robot-img {
+  width: 220px;
+  height: auto;
+  border-radius: var(--radius);
+  filter: drop-shadow(0 10px 18px rgba(18, 30, 48, 0.22));
+}
+
+/* Destello de la pantalla sobre la imagen PNG */
+.laptop-glow {
+  position: absolute;
+  left: 11%;
+  top: 38%;
+  width: 28%;
+  height: 14%;
+  background: radial-gradient(circle, rgba(91, 192, 235, 0.45) 0%, transparent 75%);
+  pointer-events: none;
+  animation: pantalla-pulso 1.8s ease-in-out infinite alternate;
+}
+
+/* Sombra en el suelo que se encoge cuando el robot sube */
+.robot-sombra {
+  width: 130px;
+  height: 16px;
+  background: rgba(18, 30, 48, 0.18);
+  border-radius: 50%;
+  filter: blur(4px);
+  animation: sombra-pulso 3.4s ease-in-out infinite;
+}
+
+/* Números 4-0-4 flotando detrás */
+.flotante-404 {
+  position: absolute;
+  font: 700 3.2rem/1 var(--serif);
+  color: var(--navy);
+  opacity: 0.14;
+  user-select: none;
+  pointer-events: none;
+}
+.flotante-404--izq {
+  left: 8px;
+  top: 24px;
+  animation: numero-flotar 4s ease-in-out infinite;
+}
+.flotante-404--centro {
+  top: 4px;
+  right: 85px;
+  color: var(--gold-700);
+  opacity: 0.22;
+  animation: numero-flotar 4.6s ease-in-out infinite 0.6s;
+}
+.flotante-404--der {
+  right: 10px;
+  top: 40px;
+  animation: numero-flotar 3.8s ease-in-out infinite 1.1s;
+}
+
+/* ERROR 404 */
+/* Animaciones internas del SVG (cabeza, parpadeo de ojos y pantalla) */
+.robot-cabeza {
+  transform-origin: 178px 114px;
+  animation: cabeza-curiosa 4.5s ease-in-out infinite;
+}
+.robot-ojos {
+  transform-origin: 178px 73px;
+  animation: ojos-parpadeo 4.2s infinite;
+}
+.robot-brazo-laptop {
+  transform-origin: 136px 140px;
+  animation: brazo-laptop 3.4s ease-in-out infinite;
+}
+.svg-404-code {
+  animation: pantalla-pulso 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes robot-flotar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+@keyframes sombra-pulso {
+  0%, 100% { transform: scale(1); opacity: 0.22; }
+  50%      { transform: scale(0.75); opacity: 0.1; }
+}
+
+@keyframes numero-flotar {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50%      { transform: translateY(-10px) rotate(6deg); }
+}
+
+@keyframes cabeza-curiosa {
+  0%, 100% { transform: rotate(0deg); }
+  30%      { transform: rotate(-5deg); }
+  70%      { transform: rotate(3deg); }
+}
+
+@keyframes ojos-parpadeo {
+  0%, 46%, 50%, 96%, 100% { transform: scaleY(1); }
+  48%, 98%                { transform: scaleY(0.08); }
+}
+
+@keyframes brazo-laptop {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(2.5deg); }
+}
+
+@keyframes pantalla-pulso {
+  0%   { opacity: 0.45; }
+  100% { opacity: 1; }
+}

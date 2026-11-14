@@ -26,6 +26,8 @@ final class PanelController extends Controller
                  'total' => (new Area())->contarActivos(),      'nota' => 'Departamentos, carreras y unidades'],
                 ['texto' => 'Ubicaciones', 'ruta' => '/ubicaciones', 'icono' => 'pin',
                  'total' => (new Ubicacion())->contarActivos(), 'nota' => 'Aulas, laboratorios y bodegas'],
+                 ['texto' => 'Soporte y QR', 'ruta' => '/tecnico', 'icono' => 'wrench',
+                 'total' => (new Mantenimiento())->resumenConteos()['pendientes'], 'nota' => 'Reportes QR y fallas pendientes'],
             ],
         ], 'panel');
     }

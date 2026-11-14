@@ -1,0 +1,281 @@
+/* =========================================================
+   tecnico.css — Escaneo QR público, ficha técnica, custodio,
+   cambio de piezas/componentes y galería de evidencias
+   ========================================================= */
+
+/* ---------- Pantalla pública de escaneo QR (/q/{token}) ---------- */
+.qr-landing {
+  min-height: 100vh;
+  padding: var(--s-6) var(--s-4);
+  background: var(--navy);
+  border-top: 4px solid var(--gold);
+  display: grid;
+  place-items: start center;
+}
+.qr-landing-wrap {
+  width: 100%;
+  max-width: 580px;
+  display: grid;
+  gap: var(--s-5);
+}
+.qr-landing-card {
+  background: #f6f7f8;
+}
+.qr-custodio-box {
+  margin: var(--s-4) var(--s-4) 0;
+  padding: var(--s-4);
+  background: var(--gold-50);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius-sm);
+}
+.qr-custodio-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gold-700);
+}
+.qr-custodio-name {
+  margin-top: var(--s-1);
+  font: 700 1.25rem/1.2 var(--serif);
+  color: var(--navy);
+}
+.qr-custodio-meta {
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+.qr-custodio-ubic {
+  margin-top: var(--s-3);
+  padding-top: var(--s-2);
+  border-top: 1px dashed var(--line);
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: 0.9375rem;
+}
+.qr-custodio-ubic .icon {
+  width: 18px;
+  height: 18px;
+  color: var(--navy-700);
+}
+.qr-acciones-principales {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  margin-top: var(--s-4);
+  border-top: 1px dashed #b9c1c8;
+  background: var(--panel);
+}
+.qr-pin-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
+}
+@media (min-width: 520px) {
+  .qr-pin-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------- Ficha técnica en el panel ---------- */
+.tec-seccion { margin-top: var(--s-6); display: grid; gap: var(--s-3); }
+.tec-sub { display: block; color: var(--ink-2); font-size: 0.875rem; font-weight: 400; }
+
+/* Bloque superior: Placa (izq) + Custodio (der) */
+.tec-ficha-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-5);
+  align-items: start;
+}
+@media (min-width: 960px) {
+  .tec-ficha-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  }
+}
+
+/* Bloque inferior (#intervencion): ancho completo en PC para no dejar huecos a la derecha */
+#intervencion {
+  grid-template-columns: 1fr !important;
+}
+
+@media (min-width: 960px) {
+  #intervencion .form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-4) var(--s-5);
+    align-items: start;
+  }
+  #intervencion .form > .field:has(#campo-tipo),
+  #intervencion .form > .field:has(#campo-problema),
+  #intervencion .form > .field:has(#campo-resultado),
+  #intervencion .form > .field:has(#campo-recomendaciones),
+  #intervencion .form > .tec-bloque-piezas,
+  #intervencion .form > .qr-pin-grid,
+  #intervencion .form > .form-acciones {
+    grid-column: 1 / -1;
+  }
+}
+
+.tec-custodio .sub-title { display: flex; align-items: center; gap: var(--s-2); }
+.tec-custodio .sub-title .icon { color: var(--navy-700); }
+
+.tec-responsable {
+  margin-top: var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  background: var(--gold-50);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius-sm);
+}
+.tec-responsable-nombre { font: 700 1.25rem/1.2 var(--serif); color: var(--navy); }
+.tec-responsable-meta { margin-top: var(--s-1); color: var(--ink-2); font-size: 0.9375rem; }
+
+.tec-ubic-titulo {
+  margin-top: var(--s-5);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-2);
+}
+
+.datos { display: grid; gap: var(--s-2); margin-top: var(--s-4); }
+.datos > div { display: grid; grid-template-columns: 8.5rem 1fr; gap: var(--s-3); align-items: baseline; }
+.datos dt { color: var(--ink-2); font-size: 0.875rem; }
+.datos dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+
+/* ---------- Componentes y Repuestos ---------- */
+.tec-comp-box {
+  padding: var(--s-4);
+  background: var(--panel);
+  border-top: 1px dashed #b9c1c8;
+}
+.tec-comp-title { font-size: 1rem; margin-bottom: var(--s-2); }
+.tec-comp-list { display: grid; gap: var(--s-2); font-size: 0.9375rem; }
+.tec-comp-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-3);
+  background: var(--ground);
+  border-radius: var(--radius-sm);
+  flex-wrap: wrap;
+}
+.tec-comp-list li.is-retirado { opacity: 0.65; }
+
+.tec-bloque-piezas {
+  margin: 0;
+  padding: var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fafbfc;
+  min-width: 0;
+}
+.tec-bloque-piezas legend {
+  font-weight: 700;
+  color: var(--navy);
+  padding-inline: var(--s-2);
+}
+.tec-checks { display: grid; gap: var(--s-2); }
+.tec-check-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-3);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.tec-check-item input { width: 18px; height: 18px; flex: none; accent-color: var(--bad); }
+
+.tec-filas-dinamicas { display: grid; gap: var(--s-3); margin-top: var(--s-2); }
+.tec-fila-comp {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--s-2);
+  padding: var(--s-3);
+  background: var(--panel);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+}
+.tec-fila-rep {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--s-2);
+  padding: var(--s-3);
+  background: var(--panel);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+}
+
+.tec-hist-repuestos {
+  margin-top: var(--s-2);
+  padding: var(--s-2) var(--s-3);
+  background: var(--gold-50);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+}
+
+/* ---------- Galería de fotos ---------- */
+.tec-galeria {
+  margin-top: var(--s-3);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--s-3);
+}
+.tec-foto-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--ground);
+  text-decoration: none;
+  font-size: 0.75rem;
+  color: var(--ink-2);
+}
+.tec-foto-card img {
+  width: 100%;
+  height: 96px;
+  object-fit: cover;
+}
+.tec-foto-card span { padding: 4px 6px; text-align: center; }
+
+/* ---------- Alerta de solicitud abierta (evita desborde del botón) ---------- */
+.tec-alerta-abierta {
+  margin-top: var(--s-4);
+  padding: var(--s-4);
+  background: var(--warn-50);
+  border-left: 4px solid var(--warn);
+  border-radius: var(--radius-sm);
+}
+.tec-alerta-abierta .btn {
+  max-width: 100%;
+  white-space: normal;
+  height: auto;
+  padding-block: var(--s-2);
+  line-height: 1.3;
+  text-align: left;
+}
+
+.tec-video-wrap {
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 280px;
+  margin-block: var(--s-4);
+  background: var(--navy-900);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.tec-video-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+input[type="date"],
+input[type="number"],
+input[type="file"] {
+  width: 100%;
+  min-height: 46px;
+  padding: 9px var(--s-3);
+  border: 1px solid #a9b4be;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font: 400 1rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums;
+}
